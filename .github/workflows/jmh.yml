@@ -1,4 +1,4 @@
-name: Maven CI
+name: JMH Benchmark
 on:
   pull_request_target:
     types:
@@ -6,7 +6,7 @@ on:
       - reopened
 
 jobs:
-  if_merged:
+  jmh-benchmark:
     if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
@@ -15,4 +15,4 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      - run: mvn --batch-mode --update-snapshots verify jmh:benchmark
+      - run: MAVEN_OPTS="-Xms512m -Xmx512m -XX:+AlwaysPreTouch" mvn --batch-mode jmh:benchmark
