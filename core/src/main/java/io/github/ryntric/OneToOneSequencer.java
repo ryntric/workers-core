@@ -53,7 +53,6 @@ public final class OneToOneSequencer extends OneToOneSequencerRightPaddings impl
 
     @Override
     public long next(int n) {
-        long sequence = this.sequence;
         long next = sequence + n;
         long wrapPoint = next - bufferSize;
         long cached = this.cached;

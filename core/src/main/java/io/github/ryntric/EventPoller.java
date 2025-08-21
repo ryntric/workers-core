@@ -36,9 +36,9 @@ public final class EventPoller<T> extends Thread {
         return Long.min(current + batchSize, sequencer.getHighestPublishedSequence(next, available));
     }
 
-    private long await(Sequence cursor, long sequence) {
+    private long await(Sequence cursor, long next) {
         long available;
-        while ((available = cursor.getAcquire()) < sequence) {
+        while ((available = cursor.getAcquire()) < next) {
             waitPolicy.await();
         }
         return available;
@@ -57,8 +57,8 @@ public final class EventPoller<T> extends Thread {
         while (running.getAcquire()) {
             try {
                 long current = sequence.getPlain();
-                long available = await(gatingSequence, current);
                 long next = current + 1;
+                long available = await(gatingSequence, next);
                 long highest = getHighest(current, next, available);
 
                 while (next <= highest) {
