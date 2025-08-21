@@ -16,8 +16,8 @@ abstract class OneToOneSequencerLeftPaddings extends AbstractSequencer {
             p60, p61, p62, p63, p64, p65, p66, p67,
             p70, p71, p72, p73, p74, p75, p76, p77;
 
-    public OneToOneSequencerLeftPaddings(PollerWaitPolicy pollerWaitPolicy, ProducerWaitPolicy producerWaitPolicy, int bufferSize) {
-        super(pollerWaitPolicy, producerWaitPolicy, bufferSize);
+    public OneToOneSequencerLeftPaddings(WaitPolicy waitPolicy, int bufferSize) {
+        super(waitPolicy, bufferSize);
     }
 }
 
@@ -25,8 +25,8 @@ abstract class OneToOneSequencerFields extends OneToOneSequencerLeftPaddings {
     long sequence = Sequence.INITIAL_VALUE;
     long cached = Sequence.INITIAL_VALUE;
 
-    public OneToOneSequencerFields(PollerWaitPolicy pollerWaitPolicy, ProducerWaitPolicy producerWaitPolicy, int bufferSize) {
-        super(pollerWaitPolicy, producerWaitPolicy, bufferSize);
+    public OneToOneSequencerFields(WaitPolicy waitPolicy, int bufferSize) {
+        super(waitPolicy, bufferSize);
     }
 }
 
@@ -40,15 +40,15 @@ abstract class OneToOneSequencerRightPaddings extends OneToOneSequencerFields {
             p60, p61, p62, p63, p64, p65, p66, p67,
             p70, p71, p72, p73, p74, p75, p76, p77;
 
-    public OneToOneSequencerRightPaddings(PollerWaitPolicy pollerWaitPolicy, ProducerWaitPolicy producerWaitPolicy, int bufferSize) {
-        super(pollerWaitPolicy, producerWaitPolicy, bufferSize);
+    public OneToOneSequencerRightPaddings(WaitPolicy waitPolicy, int bufferSize) {
+        super(waitPolicy, bufferSize);
     }
 }
 
 public final class OneToOneSequencer extends OneToOneSequencerRightPaddings implements Sequencer {
 
-    public OneToOneSequencer(PollerWaitPolicy pollerWaitPolicy, ProducerWaitPolicy producerWaitPolicy, int bufferSize) {
-        super(pollerWaitPolicy, producerWaitPolicy, bufferSize);
+    public OneToOneSequencer(WaitPolicy waitPolicy, int bufferSize) {
+        super(waitPolicy, bufferSize);
     }
 
     @Override
@@ -58,8 +58,8 @@ public final class OneToOneSequencer extends OneToOneSequencerRightPaddings impl
         long wrapPoint = next - bufferSize;
         long cached = this.cached;
 
-        if (wrapPoint > cached || cached > sequence) {
-            this.cached = producerWaitPolicy.await(wrapPoint, gatingSequence);
+        if (wrapPoint > cached) {
+            this.cached = await(gatingSequence, wrapPoint);
         }
 
         this.sequence = next;
@@ -69,7 +69,6 @@ public final class OneToOneSequencer extends OneToOneSequencerRightPaddings impl
     @Override
     public void publish(long value) {
         cursorSequence.setRelease(value);
-        pollerWaitPolicy.signal();
     }
 
     @Override

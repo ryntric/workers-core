@@ -18,22 +18,30 @@ public final class EventPoller<T> extends Thread {
     private final Sequencer sequencer;
     private final Sequence sequence;
     private final Sequence gatingSequence;
-    private final PollerWaitPolicy policy;
+    private final WaitPolicy waitPolicy;
     private final long batchSize;
 
-    public EventPoller(String name, ThreadGroup group, RingBuffer<T> buffer, PollerWaitPolicy policy, EventHandler<T> handler, BatchSizeLimit limit) {
+    public EventPoller(String name, ThreadGroup group, RingBuffer<T> buffer, WaitPolicy waitPolicy, EventHandler<T> handler, BatchSizeLimit limit) {
         super(group, name);
         this.handler = handler;
         this.buffer = buffer;
         this.sequencer = buffer.getSequencer();
         this.sequence = sequencer.getGatingSequence();
         this.gatingSequence = sequencer.getCursorSequence();
-        this.policy = policy;
+        this.waitPolicy = waitPolicy;
         this.batchSize = Util.assertBatchSizeGreaterThanZero(limit.get(buffer.size()));
     }
 
     private long getHighest(long current, long next, long available) {
         return Long.min(current + batchSize, sequencer.getHighestPublishedSequence(next, available));
+    }
+
+    private long await(Sequence cursor, long sequence) {
+        long available;
+        while ((available = cursor.getAcquire()) < sequence) {
+            waitPolicy.await();
+        }
+        return available;
     }
 
     @Override
@@ -49,7 +57,7 @@ public final class EventPoller<T> extends Thread {
         while (running.getAcquire()) {
             try {
                 long current = sequence.getPlain();
-                long available = policy.await(gatingSequence, current);
+                long available = await(gatingSequence, current);
                 long next = current + 1;
                 long highest = getHighest(current, next, available);
 

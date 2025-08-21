@@ -21,11 +21,11 @@ public final class RingBuffer<E> {
     private final E[] buffer;
     private final Sequencer sequencer;
 
-    public RingBuffer(EventFactory<E> factory, SequencerType type, PollerWaitPolicy pollerWaitPolicy, ProducerWaitPolicy producerWaitPolicy, int size) {
+    public RingBuffer(EventFactory<E> factory, SequencerType type, WaitPolicy waitPolicy, int size) {
         this.size = Util.assertThatPowerOfTwo(size);
         this.mask = size - 1;
         this.buffer = Util.fillEventBuffer(factory, (E[]) new Object[Constants.ARRAY_PADDING * 2 + size]);
-        this.sequencer = type == SINGLE_PRODUCER ? new OneToOneSequencer(pollerWaitPolicy, producerWaitPolicy, size) : new ManyToOneSequencer(pollerWaitPolicy, producerWaitPolicy, size);
+        this.sequencer = type == SINGLE_PRODUCER ? new OneToOneSequencer(waitPolicy, size) : new ManyToOneSequencer(waitPolicy, size);
     }
 
     public int size() {
@@ -63,7 +63,6 @@ public final class RingBuffer<E> {
         } finally {
             sequencer.publish(low, high);
         }
-
     }
 
     public <A, B> void publishEvent(EventTranslatorTwoArg<E, A, B> translator, A arg0, B arg1) {

@@ -3,7 +3,9 @@ package io.github.ryntric.util;
 import io.github.ryntric.Constants;
 import io.github.ryntric.EventFactory;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
 
 /**
@@ -18,6 +20,16 @@ public final class Util {
     public static VarHandle findVarHandlePrivate(Class<?> clazz, String name, Class<?> type) {
         return ThrowableSupplier.sneaky(() -> MethodHandles.privateLookupIn(clazz, MethodHandles.lookup())
                 .findVarHandle(clazz, name, type));
+    }
+
+    public static MethodHandle findStaticPrivate(Class<?> clazz, String name, MethodType type) {
+        return ThrowableSupplier.sneaky(() -> MethodHandles.privateLookupIn(clazz, MethodHandles.lookup())
+                .findStatic(clazz, name, type));
+    }
+
+    public static MethodHandle findStaticPublic(Class<?> clazz, String name, MethodType type) {
+        return ThrowableSupplier.sneaky(() -> MethodHandles.lookup()
+                .findStatic(clazz, name, type));
     }
 
     public static boolean isPowerOfTwo(int n) {

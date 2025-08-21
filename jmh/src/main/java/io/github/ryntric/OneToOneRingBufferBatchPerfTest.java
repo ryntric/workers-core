@@ -15,6 +15,8 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import java.util.concurrent.TimeUnit;
 
+import static io.github.ryntric.WaitPolicy.SPINNING;
+
 /**
  * author: ryntric
  * date: 8/11/25
@@ -52,10 +54,8 @@ public class OneToOneRingBufferBatchPerfTest {
 
     @State(Scope.Thread)
     public static class OneToOneRingBufferState {
-        private final PollerWaitPolicy pollerPolicy = PollerWaitPolicyFactory.create(PollerWaitPolicyType.PARKING);
-        private final ProducerWaitPolicy producerPolicy = ProducerWaitPolicyFactory.create(ProducerWaitPolicyType.PARKING);
-        private final RingBuffer<Event> ringBuffer = new RingBuffer<>(Event::new, SequencerType.SINGLE_PRODUCER, pollerPolicy, producerPolicy, 1 << 12);
-        private final EventPoller<Event> eventPoller = new EventPoller<>("worker-test", new ThreadGroup("test"), ringBuffer, pollerPolicy, HANDLER, BatchSizeLimit._1_2);
+        private final RingBuffer<Event> ringBuffer = new RingBuffer<>(Event::new, SequencerType.SINGLE_PRODUCER, SPINNING, 1 << 12);
+        private final EventPoller<Event> eventPoller = new EventPoller<>("worker-test", new ThreadGroup("test"), ringBuffer, SPINNING, HANDLER, BatchSizeLimit._1_2);
 
         @Setup
         public void setup() {

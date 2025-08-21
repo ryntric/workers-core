@@ -19,8 +19,8 @@ public final class ManyToOneSequencer extends AbstractSequencer {
     private final int indexShift;
     private final long mask;
 
-    public ManyToOneSequencer(PollerWaitPolicy pollerWaitPolicy, ProducerWaitPolicy producerWaitPolicy, int bufferSize) {
-        super(pollerWaitPolicy, producerWaitPolicy, bufferSize);
+    public ManyToOneSequencer(WaitPolicy waitPolicy, int bufferSize) {
+        super(waitPolicy, bufferSize);
         this.availableSlotBuffer = new int[Constants.ARRAY_PADDING * 2 + bufferSize];
         this.mask = bufferSize - 1;
         this.indexShift = Util.log2(bufferSize);
@@ -47,14 +47,14 @@ public final class ManyToOneSequencer extends AbstractSequencer {
 
     @Override
     public long next(int n) {
-        long current = cursorSequence.getAndAddVolatile(n);
+        long gating = gatingSequence.getPlain();
 
+        long current = cursorSequence.getAndAddVolatile(n);
         long next = current + n;
         long wrapPoint = next - bufferSize;
-        long gating = gatingSequence.getAcquire();
 
-        if (wrapPoint > gating || gating > current) {
-            producerWaitPolicy.await(wrapPoint, gatingSequence);
+        if (wrapPoint > gating) {
+            await(gatingSequence, wrapPoint);
         }
 
         return next;
@@ -63,7 +63,6 @@ public final class ManyToOneSequencer extends AbstractSequencer {
     @Override
     public void publish(long value) {
         setAvailable(value);
-        pollerWaitPolicy.signal();
     }
 
     @Override
