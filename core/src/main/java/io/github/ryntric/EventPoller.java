@@ -48,12 +48,12 @@ public final class EventPoller<T> extends Thread {
     public void start() {
         if (running.compareAndSet(false, true)) {
             super.start();
-            handler.onStart();
         }
     }
 
     @Override
     public void run() {
+        handler.onStart();
         while (running.getAcquire()) {
             try {
                 long current = sequence.getPlain();
@@ -72,12 +72,11 @@ public final class EventPoller<T> extends Thread {
                 handler.onError(ex);
             }
         }
+        handler.onShutdown();
     }
 
     public void shutdown() {
-        if (running.compareAndSet(true, false)) {
-            handler.onShutdown();
-        }
+        running.set(false);
     }
 
 
