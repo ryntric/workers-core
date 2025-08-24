@@ -85,6 +85,9 @@ public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
 
     @Override
     public long next(int n) {
+        int bufferSize = this.bufferSize;
+        Util.checkConstraintOfClaimedValue(n, bufferSize);
+
         long cached = this.cached;
         long next = cursorSequence.getAndAddVolatile(n) + n;
         long wrapPoint = next - bufferSize;

@@ -1,5 +1,7 @@
 package io.github.ryntric;
 
+import io.github.ryntric.util.Util;
+
 /**
  * author: ryntric
  * date: 8/8/25
@@ -53,6 +55,9 @@ public final class OneToOneSequencer extends OneToOneSequencerRightPaddings impl
 
     @Override
     public long next(int n) {
+        int bufferSize = this.bufferSize;
+        Util.checkConstraintOfClaimedValue(n, bufferSize);
+
         long cached = this.cached;
         long next = sequence + n;
         long wrapPoint = next - bufferSize;
