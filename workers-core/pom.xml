@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>core</artifactId>
+    <artifactId>workers-core</artifactId>
     <packaging>jar</packaging>
     <version>${library.version}</version>
 
