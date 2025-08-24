@@ -9,49 +9,23 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jmh</artifactId>
+    <artifactId>jcstress</artifactId>
     <packaging>jar</packaging>
-    <version>${library.version}</version>
-
     <properties>
-        <jmh-core.version>1.37</jmh-core.version>
-
+        <jcstress-core.version>0.16</jcstress-core.version>
     </properties>
+    <version>${library.version}</version>
 
     <dependencies>
         <dependency>
-            <groupId>io.github.ryntric</groupId>
-            <artifactId>workers-core</artifactId>
-            <version>${library.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-core</artifactId>
-            <version>${jmh-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-generator-annprocess</artifactId>
-            <version>${jmh-core.version}</version>
+            <groupId>org.openjdk.jcstress</groupId>
+            <artifactId>jcstress-core</artifactId>
+            <version>${jcstress-core.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.openjdk.jmh</groupId>
-                            <artifactId>jmh-generator-annprocess</artifactId>
-                            <version>${jmh-core.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -68,7 +42,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>org.openjdk.jmh.Main</Main-Class>
+                                        <Main-Class>org.openjdk.jcstress.Main</Main-Class>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
