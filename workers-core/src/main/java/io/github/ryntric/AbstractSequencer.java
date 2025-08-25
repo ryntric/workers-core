@@ -22,7 +22,7 @@ abstract class AbstractSequencer implements Sequencer {
     }
 
     protected final long await(Sequence gatingSequence, long wrapPoint) {
-        long gating = 0L;
+        long gating;
         while (wrapPoint > (gating = gatingSequence.getAcquire())) {
             waitPolicy.await();
         }
