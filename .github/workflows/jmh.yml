@@ -32,6 +32,12 @@ jobs:
         with:
           name: 'jmh-1.0-SNAPSHOT.jar'
           path: './'
+      - name: 'Setup JDK 11'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
       - name: 'Run JMH tests on linux'
         run: java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch jmh-1.0-SNAPSHOT.jar
   jmh-windows:
@@ -43,5 +49,11 @@ jobs:
         with:
           name: 'jmh-1.0-SNAPSHOT.jar'
           path: './'
+      - name: 'Setup JDK 11'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
       - name: 'Run JMH tests on windows'
         run: java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch jmh-1.0-SNAPSHOT.jar
