@@ -21,7 +21,7 @@ jobs:
       - name: 'Upload Java Artifact'
         uses: actions/upload-artifact@v4
         with:
-          name: 'jmh.jar'
+          name: 'jmh-1.0-SNAPSHOT.jar'
           path: 'jmh/target/jmh-1.0-SNAPSHOT.jar'
   jmh-linux:
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
       - name: 'Download artifact'
         uses: actions/download-artifact@v4
         with:
-          name: 'jmh.jar'
+          name: 'jmh-1.0-SNAPSHOT.jar'
           path: './'
       - name: 'Run JMH tests on linux'
-        run: ls -lta
+        run: java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch jmh-1.0-SNAPSHOT.jar
