@@ -2,84 +2,60 @@ package io.github.ryntric;
 
 import io.github.ryntric.util.Util;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
- * author: ryntric
- * date: 8/13/25
- * time: 12:00 AM
+ * author: vbondarchuk
+ * date: 8/25/25
+ * time: 12:13 PM
  **/
 
-public final class EventPoller<T> extends Thread {
-    private final AtomicBoolean running = new AtomicBoolean();
-
-    private final EventHandler<T> handler;
+public final class EventPoller<T> {
     private final RingBuffer<T> buffer;
     private final Sequencer sequencer;
     private final Sequence sequence;
     private final Sequence gatingSequence;
-    private final WaitPolicy waitPolicy;
-    private final long batchSize;
+    private final int batchSize;
 
-    public EventPoller(String name, ThreadGroup group, RingBuffer<T> buffer, WaitPolicy waitPolicy, EventHandler<T> handler, BatchSizeLimit limit) {
-        super(group, name);
-        this.handler = handler;
+    public EventPoller(RingBuffer<T> buffer, BatchSizeLimit batchSizeLimit) {
         this.buffer = buffer;
         this.sequencer = buffer.getSequencer();
         this.sequence = sequencer.getGatingSequence();
         this.gatingSequence = sequencer.getCursorSequence();
-        this.waitPolicy = waitPolicy;
-        this.batchSize = Util.assertBatchSizeGreaterThanZero(limit.get(buffer.size()));
+        this.batchSize = Util.assertBatchSizeGreaterThanZero(batchSizeLimit.get(buffer.size()));
     }
 
     private long getHighest(long current, long next, long available) {
         return Long.min(current + batchSize, sequencer.getHighestPublishedSequence(next, available));
     }
 
-    private long await(Sequence cursor, long next) {
-        long available = cursor.getPlain();
-        if (available < next) {
-            while ((available = cursor.getAcquire()) < next) {
-                waitPolicy.await();
-            }
-        }
-        return available;
-    }
-
-    @Override
-    public void start() {
-        if (running.compareAndSet(false, true)) {
-            super.start();
+    private void handle(EventHandler<T> handler, T event, long sequence) {
+        try {
+            handler.onEvent(event, sequence);
+        } catch (Throwable ex) {
+            handler.onError(ex);
         }
     }
 
-    @Override
-    public void run() {
-        handler.onStart();
-        while (running.getAcquire()) {
-            try {
-                long current = sequence.getPlain();
-                long next = current + 1;
-                long available = await(gatingSequence, next);
-                long highest = getHighest(current, next, available);
+    public PollState poll(EventHandler<T> handler) {
+        Sequence gatingSequence = this.gatingSequence;
+        Sequence sequence = this.sequence;
+        RingBuffer<T> buffer = this.buffer;
 
-                while (next <= highest) {
-                    T event = buffer.get(next);
-                    handler.onEvent(event, next);
-                    next++;
-                }
+        long current = sequence.getPlain();
+        long next = current + 1;
+        long available;
 
-                sequence.setRelease(next - 1);
-            } catch (Throwable ex) {
-                handler.onError(ex);
-            }
+        if ((available = gatingSequence.getPlain()) < next && (available = gatingSequence.getAcquire()) < next) {
+            return PollState.IDLE;
         }
-        handler.onShutdown();
+
+        long highest = getHighest(current, next, available);
+        while (next <= highest) {
+            handle(handler, buffer.get(next), next);
+            next++;
+        }
+
+        sequence.setRelease(next - 1);
+        return PollState.PROCESSING;
+
     }
-
-    public void shutdown() {
-        running.set(false);
-    }
-
-
 }

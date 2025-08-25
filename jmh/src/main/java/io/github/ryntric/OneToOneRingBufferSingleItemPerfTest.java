@@ -51,16 +51,16 @@ public class OneToOneRingBufferSingleItemPerfTest {
     @State(Scope.Thread)
     public static class RingBufferState {
         private final RingBuffer<Event> ringBuffer = new RingBuffer<>(Event::new, SequencerType.SINGLE_PRODUCER, SPINNING, 1 << 12);
-        private final EventPoller<Event> eventPoller = new EventPoller<>("worker-test", new ThreadGroup("test"), ringBuffer, SPINNING, HANDLER, BatchSizeLimit._1_2);
+        private final WorkerThread<Event> workerThread = new WorkerThread<>("worker-test", new ThreadGroup("test"), ringBuffer, SPINNING, HANDLER, BatchSizeLimit._1_2);
 
         @Setup
         public void setup() {
-            eventPoller.start();
+            workerThread.start();
         }
 
         @TearDown
         public void teardown() {
-            eventPoller.shutdown();
+            workerThread.shutdown();
         }
     }
 

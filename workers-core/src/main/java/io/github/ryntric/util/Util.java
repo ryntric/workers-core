@@ -22,16 +22,6 @@ public final class Util {
                 .findVarHandle(clazz, name, type));
     }
 
-    public static MethodHandle findStaticPrivate(Class<?> clazz, String name, MethodType type) {
-        return ThrowableSupplier.sneaky(() -> MethodHandles.privateLookupIn(clazz, MethodHandles.lookup())
-                .findStatic(clazz, name, type));
-    }
-
-    public static MethodHandle findStaticPublic(Class<?> clazz, String name, MethodType type) {
-        return ThrowableSupplier.sneaky(() -> MethodHandles.lookup()
-                .findStatic(clazz, name, type));
-    }
-
     public static boolean isPowerOfTwo(int n) {
         return Integer.bitCount(n) == 1;
     }
