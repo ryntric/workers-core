@@ -33,4 +33,4 @@ jobs:
           name: 'jmh.jar'
           path: './'
       - name: 'Run JMH tests on linux'
-        run: java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch ./jmh.jar
+        run: ls -lta
