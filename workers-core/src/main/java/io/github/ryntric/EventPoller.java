@@ -36,10 +36,6 @@ public final class EventPoller<T> {
     }
 
     public PollState poll(EventHandler<T> handler) {
-        Sequence gatingSequence = this.gatingSequence;
-        Sequence sequence = this.sequence;
-        RingBuffer<T> buffer = this.buffer;
-
         long current = sequence.getPlain();
         long next = current + 1;
         long available;
@@ -48,14 +44,12 @@ public final class EventPoller<T> {
             return PollState.IDLE;
         }
 
-        long highest = getHighest(current, next, available);
-        while (next <= highest) {
+        for(long highest = getHighest(current, next, available); next <= highest; next++) {
             handle(handler, buffer.get(next), next);
-            next++;
         }
 
         sequence.setRelease(next - 1);
         return PollState.PROCESSING;
-
     }
+
 }

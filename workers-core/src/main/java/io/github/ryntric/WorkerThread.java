@@ -30,11 +30,6 @@ public final class WorkerThread<T> extends Thread {
 
     @Override
     public void run() {
-        PaddedBoolean running = this.running;
-        EventPoller<T> poller = this.poller;
-        EventHandler<T> handler = this.handler;
-        WaitPolicy waitPolicy = this.waitPolicy;
-
         handler.onStart();
         while (running.getAcquire()) {
             if (poller.poll(handler) == PollState.IDLE) {
