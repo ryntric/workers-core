@@ -77,18 +77,6 @@ public class ManyToOneRingBufferSingleItemPerfTest {
         state.ringBuffer.publishEvent(TRANSLATOR, DUMMY_VALUE);
     }
 
-    @Benchmark
-    @Group("manyToOne")
-    public void producer3(RingBufferState state) {
-        state.ringBuffer.publishEvent(TRANSLATOR, DUMMY_VALUE);
-    }
-
-    @Benchmark
-    @Group("manyToOne")
-    public void producer4(RingBufferState state) {
-        state.ringBuffer.publishEvent(TRANSLATOR, DUMMY_VALUE);
-    }
-
     public static class Event {
         private Object payload;
 

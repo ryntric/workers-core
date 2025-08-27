@@ -83,20 +83,6 @@ public class ManyToOneRingBufferBatchPerfTest {
         state.ringBuffer.publishEvents(TRANSLATOR, DUMMIES);
     }
 
-    @Benchmark
-    @Group("manyToOne")
-    @OperationsPerInvocation(16)
-    public void producer3(OneToOneRingBufferState state) {
-        state.ringBuffer.publishEvents(TRANSLATOR, DUMMIES);
-    }
-
-    @Benchmark
-    @Group("manyToOne")
-    @OperationsPerInvocation(16)
-    public void producer4(OneToOneRingBufferState state) {
-        state.ringBuffer.publishEvents(TRANSLATOR, DUMMIES);
-    }
-
     public static class Event {
         private Object payload;
 
