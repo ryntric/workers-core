@@ -16,7 +16,7 @@ public interface Sequencer {
 
     void publish(long value);
 
-    void publish(final long low, final long high);
+    void publish(long low, long high);
 
     long getHighestPublishedSequence(long next, long available);
 
