@@ -16,6 +16,13 @@ To build and run jmh tests execute the following commands:
 mvn -pl jmh -am clean install
 java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch jmh/target/jmh-1.0-SNAPSHOT.jar
 ```
+
+If you want to run with thread affinity execute the following command:
+```shell
+taskset -c <corerange> java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch jmh/target/jmh-1.0-SNAPSHOT.jar 
+```
+
+
 To build and run jcstress tests execute the following commands:
 ```shell
 mvn -pl jcstress -am clean install
