@@ -5,7 +5,7 @@
 [![Qodana](https://github.com/ryntric/workers-core-parent/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/qodana_code_quality.yml)
 [![pages-build-deployment](https://github.com/ryntric/workers-core-parent/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/pages/pages-build-deployment)
 
-### workers-core is a low-latency Java concurrency library designed around ring buffers, sequencers, and customizable wait strategies. It provides both single-producer and multi-producer configurations, along with batch and single-item publishing modes, to maximize throughput and minimize contention
+#### It is a low-latency Java concurrency library designed around ring buffers, sequencers, and customizable wait strategies. It provides both single-producer and multi-producer configurations, along with batch and single-item publishing modes, to maximize throughput and minimize contention
 
 ---
 **Build Environment requirements**
