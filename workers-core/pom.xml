@@ -11,6 +11,6 @@
 
     <artifactId>workers-core</artifactId>
     <packaging>jar</packaging>
-    <version>${library.version}</version>
+    <version>${revision}</version>
 
 </project>

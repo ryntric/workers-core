@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
-        <library.version>1.0-SNAPSHOT</library.version>
+        <revision>1.0-SNAPSHOT</revision>
     </properties>
 
 </project>
