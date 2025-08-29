@@ -53,8 +53,8 @@ public final class Util {
         return Constants.ARRAY_PADDING + (int) (value & mask);
     }
 
-    public static int wrappedPaddedByteBufferIndex(long value, long mask) {
-        return wrapPaddedIndex(value, mask) << 2;
+    public static int wrappedBufferIndex(long value, long mask) {
+        return ((int) (value & mask)) << 2;
     }
 
     public static int getByteBufferCapacity(int bufferSize) {

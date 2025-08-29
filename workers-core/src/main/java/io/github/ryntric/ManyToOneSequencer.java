@@ -60,7 +60,7 @@ public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
 
     public ManyToOneSequencer(WaitPolicy waitPolicy, int bufferSize) {
         super(waitPolicy, bufferSize);
-        this.availableSlotBuffer = getByteBuffer(Constants.ARRAY_PADDING * 2 + bufferSize);
+        this.availableSlotBuffer = getByteBuffer(bufferSize);
         this.mask = bufferSize - 1;
         this.indexShift = Util.log2(bufferSize);
         initAvailableSlotBuffer();
@@ -73,7 +73,7 @@ public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
 
     private void initAvailableSlotBuffer() {
         for (int i = 0; i < bufferSize; i++) {
-            availableSlotBuffer.putInt(Util.wrappedPaddedByteBufferIndex(i, bufferSize), -1);
+            availableSlotBuffer.putInt(Util.wrappedBufferIndex(i, bufferSize), -1);
         }
     }
 
@@ -82,13 +82,13 @@ public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
     }
 
     private boolean isAvailable(long value) {
-        int index = Util.wrappedPaddedByteBufferIndex(value, mask);
+        int index = Util.wrappedBufferIndex(value, mask);
         int flag = calculateAvailabilityFlag(value);
-        return availableSlotBuffer.get(index) == flag || ((int) AVAILABLE_SLOT_BUFFER_VH.getAcquire(availableSlotBuffer, index)) == flag;
+        return (int) AVAILABLE_SLOT_BUFFER_VH.get(availableSlotBuffer, index) == flag || (int) AVAILABLE_SLOT_BUFFER_VH.getAcquire(availableSlotBuffer, index) == flag;
     }
 
     private void setAvailable(long value) {
-        setAvailableBufferValue(Util.wrappedPaddedByteBufferIndex(value, mask), calculateAvailabilityFlag(value));
+        setAvailableBufferValue(Util.wrappedBufferIndex(value, mask), calculateAvailabilityFlag(value));
     }
 
     private void setAvailableBufferValue(int index, int flag) {
