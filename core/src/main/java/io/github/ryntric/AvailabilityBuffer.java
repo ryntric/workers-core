@@ -30,7 +30,7 @@ public final class AvailabilityBuffer {
 
     private void init(int size) {
         for (int i = 0; i < size; i++) {
-            buffer.put(calculateIndex(i), (byte) Sequence.INITIAL_VALUE);
+            BUFFER_VH.set(buffer, calculateIndex(i), (int) Sequence.INITIAL_VALUE);
         }
     }
 
