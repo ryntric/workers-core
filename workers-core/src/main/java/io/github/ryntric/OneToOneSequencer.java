@@ -56,7 +56,7 @@ public final class OneToOneSequencer extends OneToOneSequencerRightPaddings impl
     @Override
     public long next(int n) {
         int bufferSize = this.bufferSize;
-        Util.checkConstraintOfClaimedValue(n, bufferSize);
+        checkConstraintOfClaimedValue(n, bufferSize);
 
         long cached = this.cached;
         long next = sequence + n;

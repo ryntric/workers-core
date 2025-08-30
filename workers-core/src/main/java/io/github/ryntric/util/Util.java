@@ -38,7 +38,7 @@ public final class Util {
         return batchSize;
     }
 
-    public static int log2(final int value) {
+    public static int log2(int value) {
         return Integer.SIZE - Integer.numberOfLeadingZeros(value) - 1;
     }
 
@@ -57,23 +57,5 @@ public final class Util {
         return Constants.ARRAY_PADDING + wrappedIndex(sequence, mask);
     }
 
-    public static int wrappedBufferIndex(long sequence, long mask) {
-        return wrappedIndex(sequence, mask) << 2;
-    }
-
-    public static int getByteBufferCapacity(int bufferSize) {
-        long capacity = (long) bufferSize << 2;
-        if (capacity > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Request capacity too large" + capacity);
-        }
-        return (int) capacity;
-    }
-
-
-    public static void checkConstraintOfClaimedValue(int value, int bufferSize) {
-        if (((value - 1) | (bufferSize - value)) < 0) {
-            throw new IllegalArgumentException("Claimed value " + value + " is invalid: must be between 1 and " + bufferSize);
-        }
-    }
 
 }

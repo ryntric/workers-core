@@ -14,7 +14,7 @@ public interface Sequencer {
 
     long next(int n);
 
-    void publish(long value);
+    void publish(long sequence);
 
     void publish(long low, long high);
 

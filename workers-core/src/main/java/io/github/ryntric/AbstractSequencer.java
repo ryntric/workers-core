@@ -29,6 +29,12 @@ abstract class AbstractSequencer implements Sequencer {
         return gating;
     }
 
+    protected final void checkConstraintOfClaimedValue(int value, int bufferSize) {
+        if (((value - 1) | (bufferSize - value)) < 0) {
+            throw new IllegalArgumentException("Claimed value " + value + " is invalid: must be between 1 and " + bufferSize);
+        }
+    }
+
     @Override
     public final Sequence getCursorSequence() {
         return cursorSequence;

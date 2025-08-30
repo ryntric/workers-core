@@ -52,53 +52,17 @@ abstract class ManyToOneSequencerRightPaddings extends ManyToOneSequencerFields 
 }
 
 public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
-    private static final VarHandle AVAILABLE_SLOT_BUFFER_VH = MethodHandles.byteBufferViewVarHandle(int[].class, ByteOrder.nativeOrder());
-
-    private final ByteBuffer availableSlotBuffer;
-    private final int indexShift;
-    private final long mask;
+    private final AvailabilityBuffer availabilityBuffer;
 
     public ManyToOneSequencer(WaitPolicy waitPolicy, int bufferSize) {
         super(waitPolicy, bufferSize);
-        this.availableSlotBuffer = getByteBuffer(bufferSize);
-        this.mask = bufferSize - 1;
-        this.indexShift = Util.log2(bufferSize);
-        initAvailableSlotBuffer();
-    }
-
-    private ByteBuffer getByteBuffer(int bufferSize) {
-        return ByteBuffer.allocateDirect(Util.getByteBufferCapacity(bufferSize))
-                .order(ByteOrder.nativeOrder());
-    }
-
-    private void initAvailableSlotBuffer() {
-        for (int i = 0; i < bufferSize; i++) {
-            availableSlotBuffer.putInt(i, -1);
-        }
-    }
-
-    private int calculateAvailabilityFlag(long value) {
-        return (int) (value >>> indexShift);
-    }
-
-    private boolean isAvailable(long sequence) {
-        int index = Util.wrappedBufferIndex(sequence, mask);
-        int flag = calculateAvailabilityFlag(sequence);
-        return (int) AVAILABLE_SLOT_BUFFER_VH.get(availableSlotBuffer, index) == flag || (int) AVAILABLE_SLOT_BUFFER_VH.getAcquire(availableSlotBuffer, index) == flag;
-    }
-
-    private void setAvailable(long sequence) {
-        setAvailableBufferValue(Util.wrappedBufferIndex(sequence, mask), calculateAvailabilityFlag(sequence));
-    }
-
-    private void setAvailableBufferValue(int index, int flag) {
-        AVAILABLE_SLOT_BUFFER_VH.setRelease(availableSlotBuffer, index, flag);
+        this.availabilityBuffer = new AvailabilityBuffer(bufferSize);
     }
 
     @Override
     public long next(int n) {
         int bufferSize = this.bufferSize;
-        Util.checkConstraintOfClaimedValue(n, bufferSize);
+        checkConstraintOfClaimedValue(n, bufferSize);
 
         long cached = this.cached;
         long next = cursorSequence.getAndAddVolatile(n) + n;
@@ -112,21 +76,21 @@ public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
     }
 
     @Override
-    public void publish(long value) {
-        setAvailable(value);
+    public void publish(long sequence) {
+        availabilityBuffer.set(sequence);
     }
 
     @Override
     public void publish(long low, long high) {
-        for (long i = low; i <= high; i++) {
-            setAvailable(i);
+        for (long sequence = low; sequence <= high; sequence++) {
+            availabilityBuffer.set(sequence);
         }
     }
 
     @Override
     public long getHighestPublishedSequence(long next, long available) {
         for (long sequence = next; sequence <= available; sequence++) {
-            if (!isAvailable(sequence)) {
+            if (!availabilityBuffer.isAvailable(sequence)) {
                 return sequence - 1;
             }
         }
