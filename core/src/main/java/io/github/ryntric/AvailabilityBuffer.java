@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * author: vbondarchuk
+ * author: ryntric
  * date: 8/30/25
  * time: 8:51 AM
  **/

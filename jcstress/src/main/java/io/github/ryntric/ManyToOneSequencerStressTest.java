@@ -10,7 +10,7 @@ import org.openjdk.jcstress.infra.results.Z_Result;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
- * author: vbondarchuk
+ * author: ryntric
  * date: 8/25/25
  * time: 1:28 PM
  **/

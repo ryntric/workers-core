@@ -51,22 +51,22 @@ public class OneToOneRingBufferSingleItemPerfTest {
     @State(Scope.Thread)
     public static class RingBufferState {
         private final AbstractRingBuffer<Event> ringBuffer = new OnHeapRingBuffer<>(Event::new, SequencerType.SINGLE_PRODUCER, SPINNING, 1 << 12);
-        private final WorkerThread<Event> workerThread = new WorkerThread<>("worker-test", new ThreadGroup("test"), ringBuffer, SPINNING, HANDLER, BatchSizeLimit._1_2);
+        private final Worker<Event> worker = new Worker<>("worker-test", new ThreadGroup("test"), SPINNING, HANDLER, BatchSizeLimit._1_2, ringBuffer);
 
         @Setup
         public void setup() {
-            workerThread.start();
+            worker.start();
         }
 
         @TearDown
         public void teardown() {
-            workerThread.shutdown();
+            worker.shutdown();
         }
     }
 
     @Benchmark
     public void producer(RingBufferState state) {
-        state.ringBuffer.publishEvent(TRANSLATOR, DUMMY_VALUE);
+        state.worker.publishEvent(TRANSLATOR, DUMMY_VALUE);
     }
 
     public static class Event {
