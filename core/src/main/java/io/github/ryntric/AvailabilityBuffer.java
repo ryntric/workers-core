@@ -1,11 +1,7 @@
 package io.github.ryntric;
 
+import io.github.ryntric.util.UnsafeUtil;
 import io.github.ryntric.util.Util;
-
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 /**
  * author: ryntric
@@ -14,54 +10,46 @@ import java.nio.ByteOrder;
  **/
 
 public final class AvailabilityBuffer {
-    private static final VarHandle BUFFER_VH = MethodHandles.byteBufferViewVarHandle(int[].class, ByteOrder.nativeOrder());
+    private static final int BASE_MULTIPLIER = 2;
 
-    private final ByteBuffer buffer;
+    private final long capacity;
+    private final long baseAddress;
     private final long shift;
     private final long mask;
 
     public AvailabilityBuffer(int size) {
-        this.buffer = ByteBuffer.allocateDirect(checkCapacity(getCapacity(size)))
-                .order(ByteOrder.nativeOrder());
+        this.capacity = getCapacity(size);
+        this.baseAddress = UnsafeUtil.allocateMemory(capacity);
         this.mask = size - 1;
         this.shift = Util.log2(size);
-        this.init(size);
+        this.init();
     }
 
-    private void init(int size) {
-        for (int i = 0; i < size; i++) {
-            BUFFER_VH.set(buffer, calculateIndex(i), (int) Sequence.INITIAL_VALUE);
-        }
+    private void init() {
+        UnsafeUtil.setMemory(baseAddress, capacity, (byte) -1);
     }
 
     private long getCapacity(long size) {
-        return (size << 2) + (Constants.BYTE_BUFFER_PADDING << 1);
-    }
-
-    private int checkCapacity(long capacity) {
-        if (capacity > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Requested capacity is too large" + capacity);
-        }
-        return (int) capacity;
+        return (size << BASE_MULTIPLIER) + (Constants.BYTE_BUFFER_PADDING << 1);
     }
 
     private int calculateAvailabilityFlag(long sequence) {
         return (int) (sequence >>> shift);
     }
 
-    private int calculateIndex(long sequence) {
-        return (Util.wrapIndex(sequence, mask) << 2) + Constants.BYTE_BUFFER_PADDING;
+    private long calculateAddress(long sequence) {
+        return (Util.wrapLongIndex(sequence, mask) << BASE_MULTIPLIER) + baseAddress + Constants.BYTE_BUFFER_PADDING;
     }
 
     public boolean isAvailable(long sequence) {
-        int index = calculateIndex(sequence);
+        long address = calculateAddress(sequence);
         int flag = calculateAvailabilityFlag(sequence);
-        return (int) BUFFER_VH.get(buffer, index) == flag || (int) BUFFER_VH.getAcquire(buffer, index) == flag;
+        return UnsafeUtil.getInt(address) == flag || UnsafeUtil.getIntVolatile(address) == flag;
     }
 
     public void set(long sequence) {
-        int index = calculateIndex(sequence);
+        long address = calculateAddress(sequence);
         int flag = calculateAvailabilityFlag(sequence);
-        BUFFER_VH.setRelease(buffer, index, flag);
+        UnsafeUtil.putOrderedInt(address, flag);
     }
 }

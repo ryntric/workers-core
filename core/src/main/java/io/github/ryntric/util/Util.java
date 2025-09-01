@@ -49,7 +49,11 @@ public final class Util {
     }
 
     public static int wrapIndex(long sequence, long mask) {
-        return (int) (sequence & mask);
+        return (int) wrapLongIndex(sequence, mask);
+    }
+
+    public static long wrapLongIndex(long sequence, long mask) {
+        return sequence & mask;
     }
 
 
