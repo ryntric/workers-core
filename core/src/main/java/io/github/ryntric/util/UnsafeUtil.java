@@ -11,14 +11,13 @@ import java.lang.reflect.Field;
  **/
 
 public final class UnsafeUtil {
-
-    private UnsafeUtil() {}
-
     private static final Unsafe UNSAFE = ThrowableSupplier.sneaky(() -> {
         Field field = Unsafe.class.getDeclaredField("theUnsafe");
         field.setAccessible(true);
         return (Unsafe) field.get(null);
     });
+
+    private UnsafeUtil() {}
 
     public static long allocateMemory(long size) {
         return UNSAFE.allocateMemory(size);

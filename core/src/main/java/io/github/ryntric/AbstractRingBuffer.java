@@ -4,6 +4,7 @@ import io.github.ryntric.EventTranslator.EventTranslatorFourArg;
 import io.github.ryntric.EventTranslator.EventTranslatorOneArg;
 import io.github.ryntric.EventTranslator.EventTranslatorThreeArg;
 import io.github.ryntric.EventTranslator.EventTranslatorTwoArg;
+import io.github.ryntric.util.Util;
 
 import static io.github.ryntric.SequencerType.SINGLE_PRODUCER;
 
@@ -19,7 +20,7 @@ public abstract class AbstractRingBuffer<E> {
     protected final Sequencer sequencer;
 
     protected AbstractRingBuffer(int size, SequencerType sequencerType, WaitPolicy waitPolicy) {
-        this.size = size;
+        this.size = Util.assertThatPowerOfTwo(size);
         this.mask = size - 1;
         this.sequencer = sequencerType == SINGLE_PRODUCER ? new OneToOneSequencer(waitPolicy, size) : new ManyToOneSequencer(waitPolicy, size);
     }
