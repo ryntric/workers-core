@@ -42,4 +42,8 @@ public final class UnsafeUtil {
     public static void putInt(long address, int value) {
         UNSAFE.putInt(address, value);
     }
+
+    public static Unsafe getUnsafe() {
+        return UNSAFE;
+    }
 }

@@ -56,5 +56,8 @@ public final class Util {
         return sequence & mask;
     }
 
+    public static <A> void checkArgsLength(A[] args) {
+        if (args.length >= 1) {}
+    }
 
 }

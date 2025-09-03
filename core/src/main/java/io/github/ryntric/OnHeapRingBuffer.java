@@ -9,12 +9,12 @@ import io.github.ryntric.util.Util;
  **/
 
 @SuppressWarnings("unchecked")
-public final class OnHeapRingBuffer<E> extends AbstractRingBuffer<E> {
-    private final E[] buffer;
+public final class OnHeapRingBuffer<T> extends AbstractRingBuffer<T> {
+    private final T[] buffer;
 
-    public OnHeapRingBuffer(EventFactory<E> factory, SequencerType sequencerType, WaitPolicy waitPolicy, int size) {
+    public OnHeapRingBuffer(EventFactory<T> factory, SequencerType sequencerType, WaitPolicy waitPolicy, int size) {
         super(size, sequencerType, waitPolicy);
-        this.buffer = Util.fillEventBuffer(factory, (E[]) new Object[(Constants.OBJECT_ARRAY_PADDING << 1) + size]);
+        this.buffer = Util.fillEventBuffer(factory, (T[]) new Object[(Constants.OBJECT_ARRAY_PADDING << 1) + size]);
     }
 
     private int wrapIndex(long sequence, long mask) {
@@ -22,7 +22,7 @@ public final class OnHeapRingBuffer<E> extends AbstractRingBuffer<E> {
     }
 
     @Override
-    public E get(long sequence) {
+    public T get(long sequence) {
         return buffer[wrapIndex(sequence, mask)];
     }
 

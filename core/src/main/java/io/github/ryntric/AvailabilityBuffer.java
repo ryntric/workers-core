@@ -10,7 +10,7 @@ import io.github.ryntric.util.Util;
  **/
 
 public final class AvailabilityBuffer {
-    private static final int BASE_MULTIPLIER = 2;
+    private static final int SCALE_FACTOR = 2;
 
     private final long capacity;
     private final long baseAddress;
@@ -30,7 +30,7 @@ public final class AvailabilityBuffer {
     }
 
     private long getCapacity(long size) {
-        return (size << BASE_MULTIPLIER) + (Constants.BYTE_BUFFER_PADDING << 1);
+        return (size << SCALE_FACTOR) + (Constants.BYTE_BUFFER_PADDING << 1);
     }
 
     private int calculateAvailabilityFlag(long sequence) {
@@ -38,7 +38,7 @@ public final class AvailabilityBuffer {
     }
 
     private long calculateAddress(long sequence) {
-        return (Util.wrapLongIndex(sequence, mask) << BASE_MULTIPLIER) + baseAddress + Constants.BYTE_BUFFER_PADDING;
+        return (Util.wrapLongIndex(sequence, mask) << SCALE_FACTOR) + baseAddress + Constants.BYTE_BUFFER_PADDING;
     }
 
     public boolean isAvailable(long sequence) {

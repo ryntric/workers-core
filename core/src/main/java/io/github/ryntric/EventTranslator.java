@@ -7,19 +7,23 @@ package io.github.ryntric;
  **/
 
 public interface EventTranslator {
-    interface EventTranslatorOneArg<E, A> {
-        void translateTo(E event, A arg);
+    interface EventTranslatorOneArg<T, A> {
+        void translateTo(T event, A arg);
     }
 
-    interface EventTranslatorTwoArg<E, A, B> {
-        void translateTo(E event, A arg0, B arg1);
+    interface EventTranslatorTwoArg<T, A, B> {
+        void translateTo(T event, A arg0, B arg1);
     }
 
-    interface EventTranslatorThreeArg<E, A, B, C> {
-        void translateTo(E event, A arg0, B arg1, C arg2);
+    interface EventTranslatorThreeArg<T, A, B, C> {
+        void translateTo(T event, A arg0, B arg1, C arg2);
     }
 
-    interface EventTranslatorFourArg<E, A, B, C, D> {
-        void translateTo(E event, A arg0, B arg1, C arg2, D arg3);
+    interface EventTranslatorFourArg<T, A, B, C, D> {
+        void translateTo(T event, A arg0, B arg1, C arg2, D arg3);
+    }
+
+    interface EventTranslatorFiveArg<T, A, B, C, D, E> {
+        void translateTo(T event, A arg0, B arg1, C arg2, D arg3, E arg4);
     }
 }
