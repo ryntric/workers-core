@@ -23,15 +23,15 @@ public final class EventPoller<T> {
         this.batchSize = Util.assertBatchSizeGreaterThanZero(batchSizeLimit.get(buffer.size()));
     }
 
-    private void handle(EventHandler<T> handler, T event, long sequence) {
+    private void handle(String name, EventHandler<T> handler, T event, long sequence) {
         try {
-            handler.onEvent(event, sequence);
+            handler.onEvent(name, event, sequence);
         } catch (Throwable ex) {
-            handler.onError(event, sequence, ex);
+            handler.onError(name, event, sequence, ex);
         }
     }
 
-    public PollState poll(EventHandler<T> handler) {
+    public PollState poll(String name, EventHandler<T> handler) {
         long current = sequence.getPlain();
         long next = current + 1;
         long available;
@@ -42,7 +42,7 @@ public final class EventPoller<T> {
 
         long highest = Long.min(current + batchSize, sequencer.getHighestPublishedSequence(next, available));
         for(; next <= highest; ++next) {
-            handle(handler, buffer.get(next), next);
+            handle(name, handler, buffer.get(next), next);
         }
 
         sequence.setRelease(next - 1);

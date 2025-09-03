@@ -25,22 +25,22 @@ public class OneToOneSequencerStressTest {
     private final LongAdder consumed = new LongAdder();
     private final EventHandler<Object> handler = new EventHandler<>() {
         @Override
-        public void onEvent(Object event, long sequence) {
+        public void onEvent(String name, Object event, long sequence) {
             consumed.increment();
         }
 
         @Override
-        public void onError(Object event, long sequence, Throwable ex) {
+        public void onError(String name, Object event, long sequence, Throwable ex) {
 
         }
 
         @Override
-        public void onStart() {
+        public void onStart(String name) {
 
         }
 
         @Override
-        public void onShutdown() {
+        public void onShutdown(String name) {
 
         }
     };
@@ -57,7 +57,7 @@ public class OneToOneSequencerStressTest {
     @Actor
     public void consumer(Z_Result result) {
         while (consumed.longValue() != produced.longValue()) {
-            eventPoller.poll(handler);
+            eventPoller.poll(null, handler);
         }
         result.r1 = true;
     }

@@ -32,20 +32,20 @@ public class ManyToOneRingBufferSingleItemPerfTest {
     private static final Object DUMMY_VALUE = new Object();
     private static final EventHandler<Event> HANDLER = new EventHandler<>() {
         @Override
-        public void onEvent(Event event, long sequence) {
+        public void onEvent(String name, Event event, long sequence) {
         }
 
         @Override
-        public void onError(Event event, long sequence, Throwable ex) {
+        public void onError(String name, Event event, long sequence, Throwable ex) {
 
         }
 
         @Override
-        public void onStart() {
+        public void onStart(String name) {
         }
 
         @Override
-        public void onShutdown() {
+        public void onShutdown(String name) {
         }
     };
 

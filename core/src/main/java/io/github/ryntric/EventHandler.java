@@ -7,12 +7,12 @@ package io.github.ryntric;
  **/
 
 public interface EventHandler<T> {
-    void onEvent(T event, long sequence);
+    void onEvent(String name, T event, long sequence);
 
-    void onError(T event, long sequence, Throwable ex);
+    void onError(String name, T event, long sequence, Throwable ex);
 
-    void onStart();
+    void onStart(String name);
 
-    void onShutdown();
+    void onShutdown(String name);
 
 }
