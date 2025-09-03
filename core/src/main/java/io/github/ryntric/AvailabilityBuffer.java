@@ -2,6 +2,7 @@ package io.github.ryntric;
 
 import io.github.ryntric.util.UnsafeUtil;
 import io.github.ryntric.util.Util;
+import sun.misc.Unsafe;
 
 /**
  * author: ryntric
@@ -10,6 +11,8 @@ import io.github.ryntric.util.Util;
  **/
 
 public final class AvailabilityBuffer {
+    private static final Unsafe UNSAFE = UnsafeUtil.getUnsafe();
+
     private static final int SCALE_FACTOR = 2;
 
     private final long capacity;
@@ -19,14 +22,14 @@ public final class AvailabilityBuffer {
 
     public AvailabilityBuffer(int size) {
         this.capacity = getCapacity(size);
-        this.baseAddress = UnsafeUtil.allocateMemory(capacity);
+        this.baseAddress = UNSAFE.allocateMemory(capacity);
         this.mask = size - 1;
         this.shift = Util.log2(size);
         this.init();
     }
 
     private void init() {
-        UnsafeUtil.setMemory(baseAddress, capacity, (byte) -1);
+        UNSAFE.setMemory(baseAddress, capacity, (byte) -1);
     }
 
     private long getCapacity(long size) {
@@ -44,12 +47,12 @@ public final class AvailabilityBuffer {
     public boolean isAvailable(long sequence) {
         long address = calculateAddress(sequence);
         int flag = calculateAvailabilityFlag(sequence);
-        return UnsafeUtil.getInt(address) == flag || UnsafeUtil.getIntVolatile(address) == flag;
+        return UNSAFE.getInt(address) == flag || UNSAFE.getIntVolatile(null, address) == flag;
     }
 
     public void set(long sequence) {
         long address = calculateAddress(sequence);
         int flag = calculateAvailabilityFlag(sequence);
-        UnsafeUtil.putOrderedInt(address, flag);
+        UNSAFE.putOrderedInt(null, address, flag);
     }
 }

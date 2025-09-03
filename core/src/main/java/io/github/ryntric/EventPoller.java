@@ -27,7 +27,7 @@ public final class EventPoller<T> {
         try {
             handler.onEvent(event, sequence);
         } catch (Throwable ex) {
-            handler.onError(ex);
+            handler.onError(event, sequence, ex);
         }
     }
 

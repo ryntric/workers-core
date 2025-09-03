@@ -36,7 +36,7 @@ public class ManyToOneRingBufferSingleItemPerfTest {
         }
 
         @Override
-        public void onError(Throwable ex) {
+        public void onError(Event event, long sequence, Throwable ex) {
 
         }
 

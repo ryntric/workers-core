@@ -30,7 +30,7 @@ public class OneToOneSequencerStressTest {
         }
 
         @Override
-        public void onError(Throwable ex) {
+        public void onError(Object event, long sequence, Throwable ex) {
 
         }
 

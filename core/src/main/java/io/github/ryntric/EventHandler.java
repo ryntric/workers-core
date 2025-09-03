@@ -9,7 +9,7 @@ package io.github.ryntric;
 public interface EventHandler<T> {
     void onEvent(T event, long sequence);
 
-    void onError(Throwable ex);
+    void onError(T event, long sequence, Throwable ex);
 
     void onStart();
 

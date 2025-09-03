@@ -35,7 +35,7 @@ public class OneToOneRingBufferBatchPerfTest {
         }
 
         @Override
-        public void onError(Throwable ex) {
+        public void onError(Event event, long sequence, Throwable ex) {
 
         }
 
