@@ -1,10 +1,6 @@
 package io.github.ryntric;
 
 /**
- * author: ryntric
- * date: 8/30/25
- * time: 5:35 PM
- * </p>
  * Factory for creating {@link AbstractRingBuffer} instances with configurable
  * size, sequencing, and waiting strategies.
  *
@@ -12,7 +8,6 @@ package io.github.ryntric;
  * This factory abstracts the creation of different ring buffer types
  * (currently only on-heap is implemented) and ensures proper initialization
  * with the chosen {@link EventFactory}, {@link WaitPolicy}, and {@link SequencerType}.
- * </p>
  *
  * @param <E> the type of events stored in the ring buffer
  **/

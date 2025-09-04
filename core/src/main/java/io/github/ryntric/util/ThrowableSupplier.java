@@ -1,10 +1,5 @@
 package io.github.ryntric.util;
 
-/**
- * author: ryntric
- * date: 8/8/25
- * time: 10:14 PM
- **/
 
 @FunctionalInterface
 public interface ThrowableSupplier<T, E extends Throwable> {

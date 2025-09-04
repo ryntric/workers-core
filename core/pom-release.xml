@@ -10,8 +10,8 @@
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Workers core — It is a low latency concurrent Java library</description>
-    <url>https://ryntric.github.io/workers-core-parent/</url>
+    <description>It is a low-latency Java concurrency library designed around ring buffers, sequencers, and customizable wait strategies. </description>
+    <url>https://ryntric.github.io/workers-core</url>
     <licenses>
         <license>
             <name>MIT License</name>
@@ -25,9 +25,9 @@
         </developer>
     </developers>
     <scm>
-        <url>https://ryntric.github.io/workers-core-parent/</url>
-        <connection>scm:git:git://github.com/ryntric/workers-core-parent.git</connection>
-        <developerConnection>scm:git:ssh://github.com/ryntric/workers-core-parent.git</developerConnection>
+        <url>https://ryntric.github.io/workers-core/</url>
+        <connection>scm:git:git://github.com/ryntric/workers-core.git</connection>
+        <developerConnection>scm:git:ssh://github.com/ryntric/workers-core.git</developerConnection>
     </scm>
 
     <properties>

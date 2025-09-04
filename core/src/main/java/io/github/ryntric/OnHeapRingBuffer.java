@@ -3,15 +3,10 @@ package io.github.ryntric;
 import io.github.ryntric.util.Util;
 
 /**
- * author: ryntric
- * date: 8/8/25
- * time: 10:38 PM
- * </p>
  * An on-heap ring buffer implementation that stores events in a padded array.
  * <p>
  * This ring buffer pre-allocates all events using the provided {@link EventFactory}.
  * Padding is applied on both ends of the array to prevent false sharing and improve cache locality.
- * </p>
  *
  * @param <T> the type of events stored in the ring buffer
  */

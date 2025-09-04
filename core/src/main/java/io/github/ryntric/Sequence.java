@@ -45,7 +45,6 @@ abstract class RightPaddings extends PaddedValue {
  * The {@code Sequence} value is padded on both sides to prevent false sharing
  * between neighboring fields in memory. False sharing occurs when multiple threads
  * modify adjacent fields that share the same cache line, leading to performance degradation.
- * </p>
  *
  * <p>
  * Access to {@code value} supports different memory semantics:
@@ -55,7 +54,6 @@ abstract class RightPaddings extends PaddedValue {
  *   <li>{@link #setRelease(long)} — release fence after write</li>
  *   <li>{@link #getAndAddVolatile(long)} — atomic add with volatile semantics</li>
  * </ul>
- * </p>
  */
 public final class Sequence extends RightPaddings {
     private static final VarHandle VALUE_VH = Util.findVarHandlePrivate(Sequence.class, "value", long.class);

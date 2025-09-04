@@ -1,10 +1,6 @@
 package io.github.ryntric;
 
 /**
- * author: ryntric
- * date: 8/30/25
- * time: 5:30 PM
- * </p>
  * Factory for creating {@link Worker} instances with consistent naming, thread group assignment, and ring buffer initialization.
  * @param <E> the type of events processed by the workers
  **/
@@ -45,7 +41,6 @@ public final class WorkerFactory<E> {
      * <p>
      * Each worker is assigned a unique name and its own ring buffer.
      * All workers share the same thread group and configuration.
-     * </p>
      *
      * @return a new worker instance
      */

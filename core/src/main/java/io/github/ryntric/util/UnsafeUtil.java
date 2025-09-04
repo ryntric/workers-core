@@ -4,12 +4,6 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 
-/**
- * author: ryntric
- * date: 9/1/25
- * time: 8:44 AM
- **/
-
 public final class UnsafeUtil {
     private static final Unsafe UNSAFE = ThrowableSupplier.sneaky(() -> {
         Field field = Unsafe.class.getDeclaredField("theUnsafe");

@@ -3,20 +3,15 @@ package io.github.ryntric;
 import io.github.ryntric.util.Util;
 
 /**
- * author: ryntric
- * date: 8/25/25
- * time: 12:13 PM
  * A poller that consumes events from an {@link AbstractRingBuffer} in batches, delegating processing to an {@link EventHandler}.
  * <p>
  * The poller advances a {@link Sequence} as it successfully processes events,
  * ensuring ordered consumption and backpressure control through the sequencer.
- * </p>
- *
+  *
  * <p>
  * The batch size determines the maximum number of events processed in a single
  * {@link #poll(String, EventHandler)} invocation.
- * </p>
- *
+  *
  * @param <T> the type of events stored in the buffer
  */
 

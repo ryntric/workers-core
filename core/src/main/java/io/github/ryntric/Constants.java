@@ -3,17 +3,12 @@ package io.github.ryntric;
 import sun.misc.Unsafe;
 
 /**
- * author: ryntric
- * date: 8/14/25
- * time: 12:33 PM
- * </p>
  * Low-level constants used for memory alignment and padding to reduce
  * false sharing and improve cache performance.
  * <p>
  * These are primarily used in ring buffers, off-heap structures, and
  * other high-performance concurrency primitives.
- * </p>
- **/
+  **/
 
 public interface Constants {
     /**

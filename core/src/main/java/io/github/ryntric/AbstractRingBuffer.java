@@ -10,16 +10,11 @@ import io.github.ryntric.util.Util;
 import static io.github.ryntric.SequencerType.SINGLE_PRODUCER;
 
 /**
- * author: ryntric
- * date: 8/29/25
- * time: 1:58 PM
- * </p>
  * Abstract base class for a ring buffer storing pre-allocated events.
  * <p>
  * This class supports single- and multi-producer scenarios via the {@link Sequencer} interface.
  * It provides methods for publishing events with 1–5 arguments using {@link EventTranslator} interfaces.
  * Batch publishing is also supported to improve throughput.
- * </p>
  *
  * @param <T> the type of events stored in the ring buffer
  **/

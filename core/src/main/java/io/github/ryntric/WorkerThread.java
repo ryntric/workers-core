@@ -1,16 +1,11 @@
 package io.github.ryntric;
 
 /**
- * author: ryntric
- * date: 8/13/25
- * time: 12:00 AM
- * </p>
  * A dedicated thread that consumes events from a ring buffer using an {@link EventPoller}.
  * <p>
  * This thread repeatedly polls for new events and dispatches them to the provided {@link EventHandler}.
  * It uses a {@link PaddedBoolean} flag to track its running state, avoiding false sharing,
  * and a {@link WaitPolicy} to control how the thread waits when idle.
- * </p>
  *
  * @param <T> the type of events processed by this thread
  */

@@ -1,10 +1,6 @@
 package io.github.ryntric;
 
 /**
- * author: ryntric
- * date: 8/12/25
- * time: 1:25 PM
- * </p>
  * Defines translators used to initialize events before they are published
  * to a ring buffer. Each translator provides a functional contract for
  * writing data into a pre-allocated event instance.
@@ -12,7 +8,6 @@ package io.github.ryntric;
  * Translators decouple event creation from publishing, avoiding object
  * allocation on the hot path. Instead, an event instance is reused and
  * populated with the required state before being handed off to consumers.
- * </p>
  **/
 
 public interface EventTranslator {

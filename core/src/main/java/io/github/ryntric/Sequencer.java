@@ -1,17 +1,12 @@
 package io.github.ryntric;
 
 /**
- * author: ryntric
- * date: 8/8/25
- * time: 10:38 PM
- * </p>
  * Defines a sequencing strategy for a ring buffer.
  * <p>
  * The {@code Sequencer} is responsible for assigning sequence numbers to
  * producers, tracking the highest published sequence, and providing
  * visibility guarantees to consumers.
- * </p>
- **/
+  **/
 
 public interface Sequencer {
 
@@ -76,7 +71,6 @@ public interface Sequencer {
      * Returns the sequence representing the producer cursor.
      * <p>
      * This sequence indicates the highest sequence claimed by a producer.
-     * </p>
      *
      * @return the cursor sequence
      */

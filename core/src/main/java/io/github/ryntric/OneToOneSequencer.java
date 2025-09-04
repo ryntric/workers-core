@@ -1,11 +1,5 @@
 package io.github.ryntric;
 
-/**
- * author: ryntric
- * date: 8/8/25
- * time: 11:00 PM
- **/
-
 abstract class OneToOneSequencerLeftPaddings extends AbstractSequencer {
     protected byte
             p10, p11, p12, p13, p14, p15, p16, p17,
@@ -49,8 +43,7 @@ abstract class OneToOneSequencerRightPaddings extends OneToOneSequencerFields {
  * A sequencer for one-to-one (single-producer, single-consumer) scenarios.
  * <p>
  * This sequencer supports single producer claiming sequences, while a single consumer reads them.
- * </p>
- */
+  */
 public final class OneToOneSequencer extends OneToOneSequencerRightPaddings implements Sequencer {
 
     /**

@@ -1,10 +1,6 @@
 package io.github.ryntric;
 
 /**
- * author: ryntric
- * date: 8/8/25
- * time: 11:08 PM
- * <p/>
  * Base implementation of a {@link Sequencer}, providing common functionality
  * for managing cursor and gating sequences in a ring buffer.
  * <p>
@@ -13,8 +9,7 @@ package io.github.ryntric;
  *   <li><b>cursorSequence</b> — the last published sequence (producer's position)</li>
  *   <li><b>gatingSequence</b> — the last consumed sequence (consumer's position)</li>
  * </ul>
- * </p>
- **/
+  **/
 
 abstract class AbstractSequencer implements Sequencer {
     public static final long INITIAL_CURSOR_VALUE = -1L;

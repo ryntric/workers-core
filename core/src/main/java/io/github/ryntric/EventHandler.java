@@ -1,9 +1,6 @@
 package io.github.ryntric;
 
 /**
- * author: ryntric
- * date: 8/9/25
- * time: 10:11 AM
  * A generic event handler interface that defines callbacks for processing events
  * and managing worker lifecycle states.
  **/

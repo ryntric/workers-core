@@ -1,11 +1,5 @@
 package io.github.ryntric;
 
-/**
- * author: ryntric
- * date: 8/14/25
- * time: 10:56 AM
- **/
-
 abstract class ManyToOneSequencerLeftPaddings extends AbstractSequencer {
     protected byte
             p10, p11, p12, p13, p14, p15, p16, p17,
@@ -50,7 +44,6 @@ abstract class ManyToOneSequencerRightPaddings extends ManyToOneSequencerFields 
  * This sequencer supports multiple producers claiming sequences concurrently,
  * while a single consumer reads them. It uses an {@link AvailabilityBuffer} to
  * track published sequences and padding to avoid false sharing.
- * </p>
  */
 public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
     private final AvailabilityBuffer availabilityBuffer;

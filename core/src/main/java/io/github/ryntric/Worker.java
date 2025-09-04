@@ -7,15 +7,10 @@ import io.github.ryntric.EventTranslator.EventTranslatorThreeArg;
 import io.github.ryntric.EventTranslator.EventTranslatorTwoArg;
 
 /**
- * author: ryntric
- * date: 8/30/25
- * time: 5:21 PM
- * </p>
  * A worker that processes events from a ring buffer using a dedicated thread.
  * <p>
  * This class wraps an {@link AbstractRingBuffer} and a {@link WorkerThread},
  * providing convenient methods to publish events and manage the worker lifecycle.
- * </p>
  *
  * @param <T> the type of events processed by this worker
  **/

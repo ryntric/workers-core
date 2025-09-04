@@ -5,10 +5,6 @@ import io.github.ryntric.util.Util;
 import sun.misc.Unsafe;
 
 /**
- * author: ryntric
- * date: 8/30/25
- * time: 8:51 AM
- * </p>
  * Off-heap availability buffer used to track which sequences in a ring buffer
  * have been published and are therefore available for consumption.
  * <p>
@@ -16,13 +12,11 @@ import sun.misc.Unsafe;
  * A flag is computed based on the sequence number (shifted by {@code log2(size)})
  * and written into the slot when an event is published. Consumers check the flag
  * to determine whether a sequence is available.
- * </p>
  *
  * <p>
  * Memory is allocated off-heap via {@link sun.misc.Unsafe} for low-level control
  * and to minimize GC pressure. Each slot is aligned using {@code SCALE_FACTOR}
  * and {@code Constants.BYTE_BUFFER_PADDING} to avoid false sharing.
- * </p>
  **/
 
 public final class AvailabilityBuffer {

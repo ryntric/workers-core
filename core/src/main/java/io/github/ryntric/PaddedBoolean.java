@@ -4,12 +4,6 @@ import io.github.ryntric.util.Util;
 
 import java.lang.invoke.VarHandle;
 
-/**
- * author: ryntric
- * date: 8/25/25
- * time: 6:11 PM
- **/
-
 abstract class LeftBooleanPaddings {
     protected byte
             p10, p11, p12, p13, p14, p15, p16,
@@ -46,7 +40,6 @@ abstract class RightBooleanPaddings extends PaddedBooleanValue {
  * The {@code value} field is padded on both sides using left and right padding
  * classes to ensure it occupies its own cache line. This prevents performance
  * degradation when multiple threads modify adjacent fields.
- * </p>
  *
  * <p>
  * Access methods support different memory semantics:
@@ -56,8 +49,7 @@ abstract class RightBooleanPaddings extends PaddedBooleanValue {
  *   <li>{@link #setRelease(boolean)} — release fence after write</li>
  *   <li>{@link #compareAndSetVolatile(boolean, boolean)} — atomic compare-and-set with volatile semantics</li>
  * </ul>
- * </p>
- */
+  */
 public final class PaddedBoolean extends RightBooleanPaddings {
     private static final VarHandle VALUE_VH = Util.findVarHandlePrivate(PaddedBoolean.class, "value", boolean.class);
 

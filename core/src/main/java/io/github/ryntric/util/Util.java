@@ -5,12 +5,6 @@ import io.github.ryntric.EventFactory;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 
-/**
- * author: ryntric
- * date: 8/8/25
- * time: 10:12 PM
- **/
-
 public final class Util {
     private Util() {}
 
