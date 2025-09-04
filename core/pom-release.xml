@@ -25,7 +25,7 @@
         </developer>
     </developers>
     <scm>
-        <url>https://ryntric.github.io/workers-core/</url>
+        <url>https://github.com/ryntric/workers-core/</url>
         <connection>scm:git:git://github.com/ryntric/workers-core.git</connection>
         <developerConnection>scm:git:ssh://github.com/ryntric/workers-core.git</developerConnection>
     </scm>
