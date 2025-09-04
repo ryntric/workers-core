@@ -16,12 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 import static io.github.ryntric.WaitPolicy.SPINNING;
 
-/**
- * author: ryntric
- * date: 8/11/25
- * time: 1:45 PM
- **/
-
 @Fork(1)
 @Warmup(iterations = 5)
 @BenchmarkMode(Mode.Throughput)
