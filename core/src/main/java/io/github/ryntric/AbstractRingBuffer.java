@@ -13,6 +13,15 @@ import static io.github.ryntric.SequencerType.SINGLE_PRODUCER;
  * author: ryntric
  * date: 8/29/25
  * time: 1:58 PM
+ * </p>
+ * Abstract base class for a ring buffer storing pre-allocated events.
+ * <p>
+ * This class supports single- and multi-producer scenarios via the {@link Sequencer} interface.
+ * It provides methods for publishing events with 1–5 arguments using {@link EventTranslator} interfaces.
+ * Batch publishing is also supported to improve throughput.
+ * </p>
+ *
+ * @param <T> the type of events stored in the ring buffer
  **/
 
 public abstract class AbstractRingBuffer<T> {
@@ -20,22 +29,38 @@ public abstract class AbstractRingBuffer<T> {
     protected final long mask;
     protected final Sequencer sequencer;
 
+    /**
+     * Constructs a new ring buffer with the specified parameters.
+     *
+     * @param size          the buffer size (must be a power of two)
+     * @param sequencerType SINGLE_PRODUCER or MULTI_PRODUCER
+     * @param waitPolicy    the waiting strategy used by consumers
+     */
     protected AbstractRingBuffer(int size, SequencerType sequencerType, WaitPolicy waitPolicy) {
         this.size = Util.assertThatPowerOfTwo(size);
         this.mask = size - 1;
         this.sequencer = sequencerType == SINGLE_PRODUCER ? new OneToOneSequencer(waitPolicy, size) : new ManyToOneSequencer(waitPolicy, size);
     }
 
+    /**
+     * Retrieves the event at a given sequence.
+     *
+     * @param sequence the sequence to access
+     * @return the event at the given sequence
+     */
     public abstract T get(long sequence);
 
+    /** @return the size of the buffer */
     public final int size() {
         return size;
     }
 
+    /** @return the distance between the cursor and gating sequence (number of unprocessed events) */
     public final int distance() {
         return sequencer.distance();
     }
 
+    /** @return the sequencer used by this buffer */
     public final Sequencer getSequencer() {
         return sequencer;
     }

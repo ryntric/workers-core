@@ -4,6 +4,9 @@ package io.github.ryntric;
  * author: ryntric
  * date: 8/30/25
  * time: 5:30 PM
+ * </p>
+ * Factory for creating {@link Worker} instances with consistent naming, thread group assignment, and ring buffer initialization.
+ * @param <E> the type of events processed by the workers
  **/
 
 public final class WorkerFactory<E> {
@@ -19,6 +22,15 @@ public final class WorkerFactory<E> {
 
     private int counter = 0;
 
+    /**
+     * Creates a new worker factory.
+     *
+     * @param name         base name for worker threads and thread group
+     * @param waitPolicy   waiting strategy for the worker threads
+     * @param eventHandler handler invoked for each event
+     * @param limit        batch size limit for event processing
+     * @param factory      ring buffer factory to create buffers for workers
+     */
     public WorkerFactory(String name, WaitPolicy waitPolicy, EventHandler<E> eventHandler, BatchSizeLimit limit, RingBufferFactory<E> factory) {
         this.name = name;
         this.group = new ThreadGroup(String.format(THREAD_GROUP_NAME_TEMPLATE, name));
@@ -28,9 +40,17 @@ public final class WorkerFactory<E> {
         this.factory = factory;
     }
 
+    /**
+     * Creates a new {@link Worker} instance.
+     * <p>
+     * Each worker is assigned a unique name and its own ring buffer.
+     * All workers share the same thread group and configuration.
+     * </p>
+     *
+     * @return a new worker instance
+     */
     public Worker<E> newWorker() {
         return new Worker<>(String.format(WORKER_NAME_TEMPLATE, name, counter++), group, waitPolicy, eventHandler, limit, factory.newRingBuffer());
     }
-
 
 }

@@ -10,21 +10,41 @@ import io.github.ryntric.EventTranslator.EventTranslatorTwoArg;
  * author: ryntric
  * date: 8/30/25
  * time: 5:21 PM
+ * </p>
+ * A worker that processes events from a ring buffer using a dedicated thread.
+ * <p>
+ * This class wraps an {@link AbstractRingBuffer} and a {@link WorkerThread},
+ * providing convenient methods to publish events and manage the worker lifecycle.
+ * </p>
+ *
+ * @param <T> the type of events processed by this worker
  **/
 
 public final class Worker<T> {
     private final AbstractRingBuffer<T> ringBuffer;
     private final WorkerThread<T> workerThread;
 
+    /**
+     * Creates a new worker with the specified configuration.
+     *
+     * @param name       the name of the worker thread
+     * @param group      the thread group for the worker thread
+     * @param policy     the waiting strategy used by the worker
+     * @param handler    the event handler invoked for each event
+     * @param limit      the batch size limit for processing events
+     * @param ringBuffer the ring buffer to publish and consume events
+     */
     public Worker(String name, ThreadGroup group, WaitPolicy policy, EventHandler<T> handler, BatchSizeLimit limit, AbstractRingBuffer<T> ringBuffer) {
         this.ringBuffer = ringBuffer;
         this.workerThread = new WorkerThread<>(name, group, ringBuffer, policy, handler, limit);
     }
 
+    /** Starts the worker thread. */
     public void start() {
         workerThread.start();
     }
 
+    /** Signals the worker thread to shut down gracefully. */
     public void shutdown() {
         workerThread.shutdown();
     }

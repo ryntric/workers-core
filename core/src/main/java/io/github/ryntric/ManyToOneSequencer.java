@@ -1,12 +1,5 @@
 package io.github.ryntric;
 
-import io.github.ryntric.util.Util;
-
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 /**
  * author: ryntric
  * date: 8/14/25
@@ -51,9 +44,23 @@ abstract class ManyToOneSequencerRightPaddings extends ManyToOneSequencerFields 
     }
 }
 
+/**
+ * A sequencer for many-to-one (multi-producer, single-consumer) scenarios.
+ * <p>
+ * This sequencer supports multiple producers claiming sequences concurrently,
+ * while a single consumer reads them. It uses an {@link AvailabilityBuffer} to
+ * track published sequences and padding to avoid false sharing.
+ * </p>
+ */
 public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
     private final AvailabilityBuffer availabilityBuffer;
 
+    /**
+     * Creates a new ManyToOneSequencer.
+     *
+     * @param waitPolicy the waiting strategy used by producers
+     * @param bufferSize the size of the ring buffer
+     */
     public ManyToOneSequencer(WaitPolicy waitPolicy, int bufferSize) {
         super(waitPolicy, bufferSize);
         this.availabilityBuffer = new AvailabilityBuffer(bufferSize);

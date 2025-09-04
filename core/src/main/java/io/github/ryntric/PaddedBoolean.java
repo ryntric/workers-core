@@ -40,27 +40,75 @@ abstract class RightBooleanPaddings extends PaddedBooleanValue {
             p80, p81, p82, p83, p84, p85, p86;
 }
 
+/**
+ * A padded boolean value used in concurrent data structures to avoid false sharing.
+ * <p>
+ * The {@code value} field is padded on both sides using left and right padding
+ * classes to ensure it occupies its own cache line. This prevents performance
+ * degradation when multiple threads modify adjacent fields.
+ * </p>
+ *
+ * <p>
+ * Access methods support different memory semantics:
+ * <ul>
+ *   <li>{@link #getPlain()} / {@link #setPlain(boolean)} — plain read/write without fences</li>
+ *   <li>{@link #getAcquire()} — acquire fence before read</li>
+ *   <li>{@link #setRelease(boolean)} — release fence after write</li>
+ *   <li>{@link #compareAndSetVolatile(boolean, boolean)} — atomic compare-and-set with volatile semantics</li>
+ * </ul>
+ * </p>
+ */
 public final class PaddedBoolean extends RightBooleanPaddings {
     private static final VarHandle VALUE_VH = Util.findVarHandlePrivate(PaddedBoolean.class, "value", boolean.class);
 
+    /**
+     * Sets the value without any memory fences.
+     *
+     * @param value the boolean value to set
+     */
     public void setPlain(boolean value) {
         this.value = value;
     }
 
+    /**
+     * Returns the value without any memory fences.
+     *
+     * @return the current value
+     */
     public boolean getPlain() {
         return value;
     }
 
+    /**
+     * Sets the value with a release fence, ensuring that all previous writes
+     * are visible to other threads before this write.
+     *
+     * @param value the boolean value to set
+     */
     public void setRelease(boolean value) {
         this.value = value;
         VarHandle.releaseFence();
     }
 
+    /**
+     * Returns the value with an acquire fence, ensuring that subsequent reads
+     * see this and previous writes.
+     *
+     * @return the current value
+     */
     public boolean getAcquire() {
         VarHandle.acquireFence();
         return value;
     }
 
+    /**
+     * Atomically sets the value to the given updated value if the current value
+     * {@code value == expect}. Uses volatile semantics for memory ordering.
+     *
+     * @param expect the expected current value
+     * @param value  the new value to set if the expectation is met
+     * @return true if successful, false otherwise
+     */
     public boolean compareAndSetVolatile(boolean expect, boolean value) {
         return VALUE_VH.compareAndSet(this, expect, value);
     }

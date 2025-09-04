@@ -45,8 +45,20 @@ abstract class OneToOneSequencerRightPaddings extends OneToOneSequencerFields {
     }
 }
 
+/**
+ * A sequencer for one-to-one (single-producer, single-consumer) scenarios.
+ * <p>
+ * This sequencer supports single producer claiming sequences, while a single consumer reads them.
+ * </p>
+ */
 public final class OneToOneSequencer extends OneToOneSequencerRightPaddings implements Sequencer {
 
+    /**
+     * Creates a new OneToOneSequencer.
+     *
+     * @param waitPolicy the waiting strategy used by producers
+     * @param bufferSize the size of the ring buffer
+     */
     public OneToOneSequencer(WaitPolicy waitPolicy, int bufferSize) {
         super(waitPolicy, bufferSize);
     }
