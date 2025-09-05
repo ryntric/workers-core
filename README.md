@@ -1,3 +1,4 @@
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.ryntric/workers-core.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.ryntric/workers-core)
 [![LICENSE](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/ryntric/workers-core-parent/blob/master/LICENSE)
 [![Maven Build](https://github.com/ryntric/workers-core-parent/actions/workflows/build.yml/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/build.yml)
 [![JMH Benchmark](https://github.com/ryntric/workers-core-parent/actions/workflows/jmh.yml/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/jmh.yml)
