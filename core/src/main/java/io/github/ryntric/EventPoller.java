@@ -78,7 +78,7 @@ public final class EventPoller<T> {
             handle(name, handler, buffer.get(next), next);
         }
 
-        sequence.setRelease(next - 1);
+        sequence.setRelease(highest);
         return PollState.PROCESSING;
     }
 
