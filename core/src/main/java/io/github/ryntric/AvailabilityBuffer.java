@@ -80,7 +80,7 @@ public final class AvailabilityBuffer {
     public boolean isAvailable(long sequence) {
         long address = calculateAddress(sequence);
         int flag = calculateAvailabilityFlag(sequence);
-        return UNSAFE.getInt(address) == flag || UNSAFE.getIntVolatile(null, address) == flag;
+        return UNSAFE.getIntVolatile(null, address) == flag;
     }
 
 

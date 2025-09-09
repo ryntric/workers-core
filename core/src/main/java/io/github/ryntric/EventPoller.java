@@ -69,7 +69,7 @@ public final class EventPoller<T> {
         long next = current + 1;
         long available;
 
-        if ((available = gatingSequence.getPlain()) < next && (available = gatingSequence.getAcquire()) < next) {
+        if ((available = gatingSequence.getAcquire()) < next) {
             return PollState.IDLE;
         }
 
