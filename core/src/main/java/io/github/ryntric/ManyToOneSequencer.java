@@ -82,9 +82,7 @@ public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
 
     @Override
     public void publish(long low, long high) {
-        for (long sequence = low; sequence <= high; sequence++) {
-            availabilityBuffer.set(sequence);
-        }
+        availabilityBuffer.setRange(low, high);
     }
 
     @Override

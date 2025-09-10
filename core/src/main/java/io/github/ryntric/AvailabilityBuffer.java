@@ -4,6 +4,8 @@ import io.github.ryntric.util.UnsafeUtil;
 import io.github.ryntric.util.Util;
 import sun.misc.Unsafe;
 
+import java.lang.invoke.VarHandle;
+
 /**
  * Off-heap availability buffer used to track which sequences in a ring buffer
  * have been published and are therefore available for consumption.
@@ -93,5 +95,38 @@ public final class AvailabilityBuffer {
         long address = calculateAddress(sequence);
         int flag = calculateAvailabilityFlag(sequence);
         UNSAFE.putOrderedInt(null, address, flag);
+    }
+
+    /**
+     * Marks a contiguous range of sequences as available in the availability buffer.
+     * <p>
+     * This method iterates from {@code low} to {@code high} (inclusive) and writes
+     * the corresponding availability flag for each sequence directly into off-heap memory.
+     * A release fence is applied after the loop to ensure that all previous writes to
+     * the buffer are visible to other threads.
+     * </p>
+     *
+     * <p><b>Memory Semantics:</b></p>
+     * <ul>
+     *   <li>Each individual write uses a plain {@code putInt} to the calculated memory address.</li>
+     *   <li>The {@link VarHandle#releaseFence()} ensures release semantics across all writes in the batch.</li>
+     * </ul>
+     *
+     * <p><b>Use Case:</b></p>
+     * <ul>
+     *   <li>Optimized for publishing multiple sequences at once in a multi-producer ring buffer.</li>
+     *   <li>Reduces synchronization overhead by batching writes and using a single release fence.</li>
+     * </ul>
+     *
+     * @param low  the lowest sequence number in the range to mark as available
+     * @param high the highest sequence number in the range to mark as available (inclusive)
+     */
+    public void setRange(long low, long high) {
+        for (long sequence = low; sequence <= high; sequence++) {
+            long address = calculateAddress(sequence);
+            int flag = calculateAvailabilityFlag(sequence);
+            UNSAFE.putInt(null, address, flag);
+        }
+        UNSAFE.storeFence();
     }
 }
