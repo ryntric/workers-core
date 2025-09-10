@@ -74,15 +74,37 @@ public final class AvailabilityBuffer {
     }
 
     /**
-     * Checks whether the given sequence has been marked as available.
+     * Returns the highest contiguous sequence number in the range [low, high]
+     * that has been marked as available in this buffer.
+     * <p>
+     * This method checks each sequence in order and stops at the first sequence
+     * that has not yet been published (i.e., the availability flag does not match
+     * the expected value). It ensures memory visibility of writes from other threads
+     * using a {@link sun.misc.Unsafe#loadFence()} before starting the check.
+     * <p>
+     * The availability of a sequence is determined by its "availability flag",
+     * which is calculated based on the sequence number and the buffer size.
+     * If the flag stored in memory does not match the expected value for a sequence,
+     * that sequence is considered unavailable.
+     * <p>
+     * This method is typically used by consumers in a single-writer, multi-reader
+     * scenario to efficiently determine which sequences can be safely processed.
      *
-     * @param sequence the sequence number to check
-     * @return {@code true} if the sequence is available, {@code false} otherwise
+     * @param low  the lowest sequence to check (inclusive)
+     * @param high the highest sequence to check (inclusive)
+     * @return the highest sequence number in the range that is available,
+     *         or {@code low - 1} if none are available
      */
-    public boolean isAvailable(long sequence) {
-        long address = calculateAddress(sequence);
-        int flag = calculateAvailabilityFlag(sequence);
-        return UNSAFE.getIntVolatile(null, address) == flag;
+    public long getAvailable(long low, long high) {
+        UNSAFE.loadFence();
+        for (long sequence = low; sequence <= high; sequence++) {
+            long address = calculateAddress(sequence);
+            int flag = calculateAvailabilityFlag(sequence);
+            if (UNSAFE.getInt(null, address) != flag) {
+                return sequence - 1;
+            }
+        }
+        return high;
     }
 
 

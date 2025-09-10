@@ -87,11 +87,6 @@ public final class ManyToOneSequencer extends ManyToOneSequencerRightPaddings {
 
     @Override
     public long getHighestPublishedSequence(long next, long available) {
-        for (long sequence = next; sequence <= available; sequence++) {
-            if (!availabilityBuffer.isAvailable(sequence)) {
-                return sequence - 1;
-            }
-        }
-        return available;
+        return availabilityBuffer.getAvailable(next, available);
     }
 }
