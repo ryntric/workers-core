@@ -41,9 +41,9 @@ abstract class AbstractSequencer implements Sequencer {
      */
     protected final long await(Sequence gatingSequence, long wrapPoint) {
         long gating;
-        do {
-            gating = gatingSequence.getAcquire();
-        } while (wrapPoint > gating);
+        while (wrapPoint > (gating = gatingSequence.getAcquire())) {
+            waitPolicy.await();
+        }
         return gating;
     }
 

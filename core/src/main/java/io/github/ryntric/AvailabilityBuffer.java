@@ -87,8 +87,6 @@ public final class AvailabilityBuffer {
      * If the flag stored in memory does not match the expected value for a sequence,
      * that sequence is considered unavailable.
      * <p>
-     * This method is typically used by consumers in a single-writer, multi-reader
-     * scenario to efficiently determine which sequences can be safely processed.
      *
      * @param low  the lowest sequence to check (inclusive)
      * @param high the highest sequence to check (inclusive)
