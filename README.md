@@ -176,17 +176,17 @@ Vulnerabilities:
 
 **Results:**
 
-| Benchmark                                                 | Mode  | Cnt | Score          | Error          | Units |
-| --------------------------------------------------------- | ------|-----|----------------|----------------| ----- |
-| ManyToOneRingBufferBatchPerfTest.manyToOne                | thrpt | 5   | 633888117.801  | ± 22445370.207 | ops/s |
-| ManyToOneRingBufferBatchPerfTest.manyToOne:producer1      | thrpt | 5   | 158096131.392  | ±  6493754.594 | ops/s |
-| ManyToOneRingBufferBatchPerfTest.manyToOne:producer2      | thrpt | 5   | 158349082.843  | ±  6794095.824 | ops/s |
-| ManyToOneRingBufferBatchPerfTest.manyToOne:producer3      | thrpt | 5   | 158816849.255  | ±  5161001.374 | ops/s |
-| ManyToOneRingBufferBatchPerfTest.manyToOne:producer4      | thrpt | 5   | 158626054.311  | ±  5381796.289 | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne           | thrpt | 5   | 38105340.990   | ±   840096.599 | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer1 | thrpt | 5   | 9531410.450    | ±   905999.350 | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer2 | thrpt | 5   | 9550906.957    | ±   478558.760 | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer3 | thrpt | 5   | 9454564.351    | ±   603505.427 | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer4 | thrpt | 5   | 9568459.232    | ±   442088.816 | ops/s |
-| OneToOneRingBufferBatchPerfTest.producer                  | thrpt | 5   | 436154321.131  | ±   410209.874 | ops/s |
-| OneToOneRingBufferSingleItemPerfTest.producer             | thrpt | 5   | 145633732.829  | ±   604711.778 | ops/s |
+| Benchmark                                                 | Mode  | Cnt | Score         | Error          | Units |
+| --------------------------------------------------------- | ------|-----|---------------|----------------| ----- |
+| ManyToOneRingBufferBatchPerfTest.manyToOne                | thrpt | 5   | 667102846.752 | ± 14396123.676 | ops/s |
+| ManyToOneRingBufferBatchPerfTest.manyToOne:producer1      | thrpt | 5   | 166785886.141 | ±  5733045.797 | ops/s |
+| ManyToOneRingBufferBatchPerfTest.manyToOne:producer2      | thrpt | 5   | 166549133.081 | ±  3021114.988 | ops/s |
+| ManyToOneRingBufferBatchPerfTest.manyToOne:producer3      | thrpt | 5   | 166982504.013 | ±  1830054.888 | ops/s |
+| ManyToOneRingBufferBatchPerfTest.manyToOne:producer4      | thrpt | 5   | 166785323.517 | ±  4021763.914 | ops/s |
+| ManyToOneRingBufferSingleItemPerfTest.manyToOne           | thrpt | 5   | 38545375.262  | ±   66099.878  | ops/s |
+| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer1 | thrpt | 5   | 9601547.399   | ±   95928.695  | ops/s |
+| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer2 | thrpt | 5   | 9640775.695   | ±   196732.150 | ops/s |
+| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer3 | thrpt | 5   | 9599867.147   | ±   321049.555 | ops/s |
+| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer4 | thrpt | 5   | 9703185.020   | ±   9703185.020| ops/s |
+| OneToOneRingBufferBatchPerfTest.producer                  | thrpt | 5   | 413675970.602 | ±   1663507.408| ops/s |
+| OneToOneRingBufferSingleItemPerfTest.producer             | thrpt | 5   | 195801682.174 | ±   347208.996 | ops/s |
