@@ -1,87 +1,28 @@
 package io.github.ryntric;
 
-/**
- * Defines a sequencing strategy for a ring buffer.
- * <p>
- * The {@code Sequencer} is responsible for assigning sequence numbers to
- * producers, tracking the highest published sequence, and providing
- * visibility guarantees to consumers.
-  **/
 
-public interface Sequencer {
+interface Sequencer {
 
-    /**
-     * Claim the next sequence number for publishing a single event.
-     *
-     * @return the claimed sequence
-     */
-    default long next() {
-        return next(1);
+    default long next(Coordinator coordinator) {
+        return next(coordinator, 1);
     }
 
-    /**
-     * Claim the next {@code n} sequence numbers for publishing multiple events (batching).
-     *
-     * @param n number of sequences to claim
-     * @return the highest claimed sequence
-     */
-    long next(int n);
+    long next(Coordinator coordinator, int n);
 
-    /**
-     * Publish a single sequence, making it visible to consumers.
-     *
-     * @param sequence the sequence to publish
-     */
-    void publish(long sequence);
+    void publishCursorSequence(long sequence);
 
-    /**
-     * Publish a range of sequences, making them visible to consumers.
-     *
-     * @param low  the lowest sequence in the batch
-     * @param high the highest sequence in the batch
-     */
-    void publish(long low, long high);
+    void publishCursorSequence(long low, long high);
 
-    /**
-     * Returns the highest sequence that has been published and is available
-     * for consumers between {@code next} and {@code available}.
-     *
-     * @param next      the next sequence the producer intends to publish
-     * @param available the highest sequence known to be available
-     * @return the highest published sequence in the given range
-     */
-    long getHighestPublishedSequence(long next, long available);
+    void publishGatingSequence(long sequence);
 
-    /**
-     * Returns the number of events that are currently in the buffer
-     * between the producer cursor and the gating sequence.
-     *
-     * @return the distance between cursor and gating sequence
-     */
-    int distance();
+    void advanceGatingSequence(long sequence, long current);
 
-    /**
-     * Returns the size of the ring buffer managed by this sequencer.
-     *
-     * @return the buffer size
-     */
-    int size();
+    long getHighest(long low, long high);
 
-    /**
-     * Returns the sequence representing the producer cursor.
-     * <p>
-     * This sequence indicates the highest sequence claimed by a producer.
-     *
-     * @return the cursor sequence
-     */
-    Sequence getCursorSequence();
+    long getCursorSequenceAcquire();
 
-    /**
-     * Returns the gating sequence that producers use to prevent
-     * overwriting unprocessed entries.
-     *
-     * @return the gating sequence
-     */
-    Sequence getGatingSequence();
+    long getGatingSequencePlain();
+
+    long wait(Coordinator coordinator, Sequence gatingSequence, long wrapPoint);
 
 }

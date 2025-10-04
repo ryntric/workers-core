@@ -21,7 +21,7 @@ import java.lang.invoke.VarHandle;
  * and {@code Constants.BYTE_BUFFER_PADDING} to avoid false sharing.
  **/
 
-public final class AvailabilityBuffer {
+final class AvailabilityBuffer {
     private static final Unsafe UNSAFE = UnsafeUtil.getUnsafe();
 
     private static final int SCALE_FACTOR = 2;
