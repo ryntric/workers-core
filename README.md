@@ -38,54 +38,23 @@ Example of usage
 
 ```java
 public class Main {
-    public static void main(String[] args) {
-        EventFactory<Event> factory = Event::new;
-        RingBuffer<Event> buffer = new RingBuffer<>(factory, SequencerType.SINGLE_PRODUCER, WaitPolicy.SPINNING, 1024);
-        EventHandler<Event> handler = new  EventHandler<>() {
-            @Override
-            public void onEvent(Event event, long sequence) {
-                System.out.println("Event received: " + event + ", sequence: " + sequence);
-            }
+    private static final AtomicLong counter = new AtomicLong();
 
-            @Override
-            public void onError(Throwable ex) {
-
-            }
-
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onShutdown() {
-
-            }
-        };
-        EventTranslator.EventTranslatorOneArg<Event, Object> translator = Event::setEvent;
-        WorkerThread<Event> workerThread = new WorkerThread<>("test-worker", new ThreadGroup("thread-group"), buffer, WaitPolicy.PARKING, handler, BatchSizeLimit._1_2);
-        workerThread.start();
-
-        for (int i = 0; i < 1024; i++) {
-            buffer.publishEvent(translator, new Object());
-        }
-        
+    private static class Event {
     }
 
-    public static class Event {
-        private Object event;
+    public static void main(String[] args) {
+        Channel<Event> channel = Channel.spsc(8192, ProducerWaitStrategyType.SPINNING, ConsumerWaitStrategyType.SPINNING);
+        Consumer<Event> handler = event -> System.out.println("Event received: " + counter.getAndIncrement());
 
-        public Object getEvent() {
-            return event;
-        }
+        new Thread(() -> {
+            while (true) {
+                channel.blockingReceive(2048, handler);
+            }
+        }).start();
 
-        public void setEvent(Object event) {
-            this.event = event;
-        }
-
-        @Override
-        public String toString() {
-            return "Event{" + "event=" + event + '}';
+        for (int i = 0; i < 15_000_000; i++) {
+            channel.push(new Event());
         }
     }
 }
