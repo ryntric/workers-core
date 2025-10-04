@@ -17,19 +17,19 @@
 To build and run jmh tests execute the following commands:
 ```shell
 mvn -pl jmh -am clean install
-java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch jmh/target/jmh-1.0-SNAPSHOT.jar
+java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC jmh/target/jmh-1.0-SNAPSHOT.jar
 ```
 
 If you want to run with thread affinity execute the following command:
 ```shell
-taskset -c <corerange> java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch jmh/target/jmh-1.0-SNAPSHOT.jar 
+taskset -c <corerange> java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC jmh/target/jmh-1.0-SNAPSHOT.jar 
 ```
 
 
 To build and run jcstress tests execute the following commands:
 ```shell
 mvn -pl jcstress -am clean install
-java -jar -Xms2G -Xmx2G -XX:+AlwaysPreTouch jcstress/target/jcstress-1.0-SNAPSHOT.jar 
+java -jar jcstress/target/jcstress-1.0-SNAPSHOT.jar 
 ```
 ---
 
@@ -39,6 +39,7 @@ Example of usage
 ```java
 public class Main {
     private static final AtomicLong counter = new AtomicLong();
+    private static final Event DUMMY = new Event();
 
     private static class Event {
     }
@@ -54,7 +55,7 @@ public class Main {
         }).start();
 
         for (int i = 0; i < 15_000_000; i++) {
-            channel.push(new Event());
+            channel.push(DUMMY);
         }
     }
 }
