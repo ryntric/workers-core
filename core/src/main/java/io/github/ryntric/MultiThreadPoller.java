@@ -3,7 +3,7 @@ package io.github.ryntric;
 
 import java.util.function.Consumer;
 
-final class MultiThreadPoller<T> implements Poller<T> {
+final class MultiThreadPoller<T> extends AbstractPoller<T> {
     private final Sequence sequence = new Sequence(Sequence.INITIAL_VALUE);
 
     @Override
@@ -26,7 +26,7 @@ final class MultiThreadPoller<T> implements Poller<T> {
         } while (!sequence.weakCompareAndSetVolatile(current, highest));
 
         for (; next <= highest; next++) {
-            consumer.accept(ringBuffer.dequeue(next));
+            handle(consumer, ringBuffer.dequeue(next), next);
         }
 
         sequencer.advanceGatingSequence(highest, current);

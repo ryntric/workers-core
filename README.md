@@ -1,12 +1,12 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.ryntric/workers-core.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.ryntric/workers-core)
-[![LICENSE](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/ryntric/workers-core-parent/blob/master/LICENSE)
-[![Maven Build](https://github.com/ryntric/workers-core-parent/actions/workflows/build.yml/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/build.yml)
-[![JMH Benchmark](https://github.com/ryntric/workers-core-parent/actions/workflows/jmh.yml/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/jmh.yml)
-[![JCStress Tests](https://github.com/ryntric/workers-core-parent/actions/workflows/jcstress.yml/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/jcstress.yml)
-[![Qodana](https://github.com/ryntric/workers-core-parent/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/qodana_code_quality.yml)
-[![pages-build-deployment](https://github.com/ryntric/workers-core-parent/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/ryntric/workers-core-parent/actions/workflows/pages/pages-build-deployment)
+[![LICENSE](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/ryntric/channels-java/blob/master/LICENSE)
+[![Maven Build](https://github.com/ryntric/channels-java/actions/workflows/build.yml/badge.svg)](https://github.com/ryntric/channels-java/actions/workflows/build.yml)
+[![JMH Benchmark](https://github.com/ryntric/channels-java/actions/workflows/jmh.yml/badge.svg)](https://github.com/ryntric/channels-java/actions/workflows/jmh.yml)
+[![JCStress Tests](https://github.com/ryntric/channels-java/actions/workflows/jcstress.yml/badge.svg)](https://github.com/ryntric/channels-java/actions/workflows/jcstress.yml)
+[![Qodana](https://github.com/ryntric/channels-java/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/ryntric/channels-java/actions/workflows/qodana_code_quality.yml)
+[![pages-build-deployment](https://github.com/ryntric/channels-java/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/ryntric/channels-java/actions/workflows/pages/pages-build-deployment)
 
-#### It is a low-latency Java concurrency library designed around ring buffers, sequencers, and customizable wait strategies. It provides both single-producer and multi-producer configurations, along with batch and single-item publishing modes, to maximize throughput and minimize contention
+#### It is a low-latency rust concurrency library designed around ring buffers, sequencers, and customizable wait strategies. It provides spsc, mpsc, spmc, mpmc channels along with batch and single-item publishing modes, to maximize throughput and minimize contention
 
 ---
 **Build Environment requirements**
@@ -146,17 +146,13 @@ Vulnerabilities:
 
 **Results:**
 
-| Benchmark                                                 | Mode  | Cnt | Score         | Error          | Units |
-| --------------------------------------------------------- | ------|-----|---------------|----------------| ----- |
-| ManyToOneRingBufferBatchPerfTest.manyToOne                | thrpt | 5   | 667102846.752 | ± 14396123.676 | ops/s |
-| ManyToOneRingBufferBatchPerfTest.manyToOne:producer1      | thrpt | 5   | 166785886.141 | ±  5733045.797 | ops/s |
-| ManyToOneRingBufferBatchPerfTest.manyToOne:producer2      | thrpt | 5   | 166549133.081 | ±  3021114.988 | ops/s |
-| ManyToOneRingBufferBatchPerfTest.manyToOne:producer3      | thrpt | 5   | 166982504.013 | ±  1830054.888 | ops/s |
-| ManyToOneRingBufferBatchPerfTest.manyToOne:producer4      | thrpt | 5   | 166785323.517 | ±  4021763.914 | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne           | thrpt | 5   | 38545375.262  | ±   66099.878  | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer1 | thrpt | 5   | 9601547.399   | ±   95928.695  | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer2 | thrpt | 5   | 9640775.695   | ±   196732.150 | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer3 | thrpt | 5   | 9599867.147   | ±   321049.555 | ops/s |
-| ManyToOneRingBufferSingleItemPerfTest.manyToOne:producer4 | thrpt | 5   | 9703185.020   | ±   9703185.020| ops/s |
-| OneToOneRingBufferBatchPerfTest.producer                  | thrpt | 5   | 413675970.602 | ±   1663507.408| ops/s |
-| OneToOneRingBufferSingleItemPerfTest.producer             | thrpt | 5   | 195801682.174 | ±   347208.996 | ops/s |
+| Benchmark                                     | Mode | Cnt | Producer | Consumer | Score          | Error           | Units |
+|-----------------------------------------------|------|-----|----------|----------|----------------|-----------------|-------|
+| MultiProducerMultiConsumerBatchItemPerfTest   | thrpt| 5   | 4        | 4        | 630389637.679  | ± 195350961.870 | ops/s |
+| MultiProducerMultiConsumerSingleItemPerfTest  | thrpt| 5   | 4        | 4        | 14443268.801   | ± 4127728.673   | ops/s |
+| MultiProducerSingleConsumerBatchItemPerfTest  | thrpt| 5   | 4        | 1        | 1006265833.688 | ± 1136450.559   | ops/s |
+| MultiProducerSingleConsumerSingleItemPerfTest | thrpt| 5   | 4        | 1        | 42846226.263   | ± 44004.409     | ops/s |
+| SingleProducerMultiConsumerBatchItemPerfTest  | thrpt| 5   | 1        | 4        | 1835065761.167 | ± 3860980.946   | ops/s |
+| SingleProducerSingleConsumerBatchItemPerfTest | thrpt| 5   | 1        | 1        | 1869878781.366 | ± 869359.180    | ops/s |
+| SingleProducerSingleConsumerSingleItemPerfTest| thrpt| 5   | 1        | 1        | 172879950.874  | ± 6082737.656   | ops/s |
+

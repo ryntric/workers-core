@@ -3,7 +3,7 @@ package io.github.ryntric;
 
 import java.util.function.Consumer;
 
-final class SingleThreadPoller<T> implements Poller<T> {
+final class SingleThreadPoller<T> extends AbstractPoller<T> {
 
     @Override
     public PollState poll(Sequencer sequencer, RingBuffer<T> ringBuffer, long batchSize, Consumer<T> consumer) {
@@ -17,7 +17,7 @@ final class SingleThreadPoller<T> implements Poller<T> {
 
         long highest = sequencer.getHighest(next, available);
         for (; next <= highest; next++) {
-            consumer.accept(ringBuffer.dequeue(next));
+            handle(consumer, ringBuffer.dequeue(next), next);
         }
         sequencer.publishGatingSequence(highest);
         return PollState.PROCESSING;
