@@ -13,7 +13,7 @@ package io.github.ryntric;
  * the buffer has no free slots. The specific wait behavior depends on the
  * implementation.</p>
  *
- * <h3>Implementation Notes</h3>
+ * Implementation Notes
  * <ul>
  *   <li>Spin-based strategies continuously poll the buffer and do not yield the CPU.</li>
  *   <li>Yielding strategies hint the scheduler to allow other threads to run.</li>

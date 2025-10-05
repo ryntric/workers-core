@@ -14,7 +14,7 @@ package io.github.ryntric;
  * polling loop. This strategy is best suited for dedicated threads in tight loops
  * on systems with spare CPU capacity.</p>
  *
- * <h3>Characteristics</h3>
+ * Characteristics
  * <ul>
  *   <li>Very low latency due to immediate spin-resume.</li>
  *   <li>High CPU usage, especially if the consumer has no work to process.</li>

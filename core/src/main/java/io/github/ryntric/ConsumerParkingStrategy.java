@@ -17,7 +17,7 @@ import java.util.concurrent.locks.LockSupport;
  * intentionally a no-op because the parked thread will resume automatically on its
  * next iteration. It is most effective when used in continuous polling loops.</p>
  *
- * <h3>Characteristics</h3>
+ * Characteristics
  * <ul>
  *   <li>Low CPU usage compared to spinning or yielding.</li>
  *   <li>Suitable for continuously running consumer threads.</li>

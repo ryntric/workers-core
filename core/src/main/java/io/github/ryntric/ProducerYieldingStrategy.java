@@ -10,7 +10,7 @@ package io.github.ryntric;
  * and CPU usage.
  * </p>
  *
- * <h3>Characteristics</h3>
+ * Characteristics
  * <ul>
  *   <li>Lower CPU usage than spinning, but slightly higher latency.</li>
  *   <li>Does not block the thread.</li>

@@ -12,7 +12,7 @@ package io.github.ryntric;
  * is intentionally a no-op. The consumer thread resumes automatically in the next
  * iteration of its polling loop.</p>
  *
- * <h3>Characteristics</h3>
+ * Characteristics
  * <ul>
  *   <li>Lower CPU usage than spinning, but slightly higher latency.</li>
  *   <li>Does not block the thread.</li>

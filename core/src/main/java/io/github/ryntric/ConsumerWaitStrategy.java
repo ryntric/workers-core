@@ -13,7 +13,7 @@ package io.github.ryntric;
  * when no work is available, and calling {@link #signal()} to notify the consumer
  * that new data has arrived (if the strategy supports signaling).</p>
  *
- * <h3>Implementation Notes</h3>
+ * Implementation Notes
  * <ul>
  *   <li>Spin-based strategies usually ignore {@link #signal()}.</li>
  *   <li>Blocking strategies typically require {@link #signal()} to wake the thread.</li>

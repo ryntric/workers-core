@@ -12,7 +12,7 @@ import java.util.concurrent.locks.LockSupport;
  * reducing CPU usage while maintaining relatively fast wake-up times.
  * </p>
  *
- * <h3>Characteristics</h3>
+ * Characteristics
  * <ul>
  *   <li>Reduces CPU usage compared to spinning or yielding.</li>
  *   <li>Does not rely on signaling; the thread resumes automatically after the park duration.</li>

@@ -15,7 +15,7 @@ package io.github.ryntric;
  * (typically the producer or coordinator) invokes {@link #signal()}, which
  * releases the waiting consumer.</p>
  *
- * <h3>Thread Safety</h3>
+ * Thread Safety
  * <ul>
  *   <li>All blocking and signaling is synchronized on a shared mutex.</li>
  *   <li>Multiple consumers can safely use separate instances of this strategy.</li>

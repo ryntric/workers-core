@@ -9,7 +9,7 @@ package io.github.ryntric;
  * maximizing responsiveness at the cost of higher CPU usage.
  * </p>
  *
- * <h3>Characteristics</h3>
+ * Characteristics
  * <ul>
  *   <li>Very low latency due to immediate spin-resume.</li>
  *   <li>High CPU usage if the buffer has no available capacity.</li>

@@ -14,7 +14,7 @@ package io.github.ryntric;
  * has no available data. The {@link #wakeupConsumer()} method signals blocked or
  * parked consumers that new data has arrived.</p>
  *
- * <h3>Characteristics</h3>
+ * Characteristics
  * <ul>
  *   <li>Thread-safe: multiple producers and consumers can safely share a single coordinator.</li>
  *   <li>Wait strategies are pluggable and configurable per use case.</li>

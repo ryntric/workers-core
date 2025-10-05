@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  * The {@link Coordinator} controls the wait strategies for both sides, allowing
  * fine-grained tuning of CPU utilization and latency characteristics.</p>
  *
- * <h3>Usage Example</h3>
+ * Usage Example
  * <pre>{@code
  * Channel<String> channel = Channel.mpsc(
  *     1024,
