@@ -11,7 +11,7 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>It is a low-latency Java concurrency library designed around ring buffers, sequencers, and customizable wait strategies. </description>
-    <url>https://ryntric.github.io/workers-core</url>
+    <url>https://ryntric.github.io/channels-java</url>
     <licenses>
         <license>
             <name>MIT License</name>
@@ -25,9 +25,9 @@
         </developer>
     </developers>
     <scm>
-        <url>https://github.com/ryntric/workers-core/</url>
-        <connection>scm:git:git://github.com/ryntric/workers-core.git</connection>
-        <developerConnection>scm:git:ssh://github.com/ryntric/workers-core.git</developerConnection>
+        <url>https://github.com/ryntric/channels-java/</url>
+        <connection>scm:git:git://github.com/ryntric/channels-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com/ryntric/channels-java.git</developerConnection>
     </scm>
 
     <properties>
