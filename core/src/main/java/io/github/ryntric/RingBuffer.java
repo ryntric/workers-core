@@ -40,7 +40,7 @@ final class RingBuffer<T> {
         return value;
     }
 
-    public PollState poll(int batchsize, Consumer<T> consumer) {
+    public PollerState poll(int batchsize, Consumer<T> consumer) {
         return poller.poll(sequencer, this, batchsize, consumer);
     }
 

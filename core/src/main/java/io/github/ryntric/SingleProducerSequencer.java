@@ -16,7 +16,10 @@ abstract class SingleProducerSequencerLeftPaddings extends AbstractSequencer {
 }
 
 abstract class SingleProducerSequencerFields extends SingleProducerSequencerLeftPaddings {
+    /** The last claimed sequence for the producer. */
     long sequence = Sequence.INITIAL_VALUE;
+
+    /** Cached value of the last observed gating sequence. */
     long cached = Sequence.INITIAL_VALUE;
 
     public SingleProducerSequencerFields(int bufferSize) {
@@ -39,12 +42,31 @@ abstract class SingleProducerSequencerRightPaddings extends SingleProducerSequen
     }
 }
 
+/**
+ * A high-performance sequencer for a single producer writing to a ring buffer.
+ * <p>
+ * This class provides single-producer semantics using a cached gating sequence
+ * and cursor sequence. Producers claim sequences via {@link #next(Coordinator, int)}
+ * and publish them via {@link #publishCursorSequence(long)} or
+ * {@link #publishCursorSequence(long, long)}.
+ * </p>
+ *
+ * <p>Because this is a single-producer sequencer, it does not require an
+ * {@link AvailabilityBuffer} or complex CAS operations for multi-threaded producers.
+ * </p>
+ *
+ * @see AbstractSequencer
+ * @see Sequencer
+ */
 final class SingleProducerSequencer extends SingleProducerSequencerRightPaddings implements Sequencer {
 
     SingleProducerSequencer(int bufferSize) {
         super(bufferSize);
     }
 
+    /**
+     * @see Sequencer
+     */
     @Override
     public long next(Coordinator coordinator, int n) {
         long cached = this.cached;
@@ -59,16 +81,25 @@ final class SingleProducerSequencer extends SingleProducerSequencerRightPaddings
         return next;
     }
 
+    /**
+     * @see Sequencer
+     */
     @Override
     public void publishCursorSequence(long value) {
         cursorSequence.setRelease(value);
     }
 
+    /**
+     * @see Sequencer
+     */
     @Override
     public void publishCursorSequence(long low, long high) {
         cursorSequence.setRelease(high);
     }
 
+    /**
+     * @see Sequencer
+     */
     @Override
     public long getHighest(long low, long high) {
         return high;

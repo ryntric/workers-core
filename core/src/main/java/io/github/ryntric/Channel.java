@@ -3,6 +3,45 @@ package io.github.ryntric;
 
 import java.util.function.Consumer;
 
+/**
+ * A high-performance, lock-free message channel built on top of a {@link RingBuffer}.
+ * <p>
+ * The {@code Channel} class provides an abstraction for exchanging data between
+ * producers and consumers with minimal latency. It supports multiple concurrency
+ * configurations such as SPSC (single-producer/single-consumer), MPSC (multi-producer/
+ * single-consumer), SPMC (single-producer/multi-consumer), and MPMC (multi-producer/
+ * multi-consumer) through specialized {@link Sequencer} and {@link Poller}
+ * implementations.
+ * </p>
+ *
+ * <p>Producers publish items using {@link #push(Object)} or {@link #push(Object[])}.
+ * Consumers retrieve items using {@link #receive(int, Consumer)} or
+ * {@link #blockingReceive(int, Consumer)}.
+ * The {@link Coordinator} controls the wait strategies for both sides, allowing
+ * fine-grained tuning of CPU utilization and latency characteristics.</p>
+ *
+ * <h3>Usage Example</h3>
+ * <pre>{@code
+ * Channel<String> channel = Channel.mpsc(
+ *     1024,
+ *     ProducerWaitStrategyType.SPINNING,
+ *     ConsumerWaitStrategyType.BLOCKING
+ * );
+ *
+ * // Producer
+ * channel.push("Hello");
+ *
+ * // Consumer
+ * channel.blockingReceive(64, msg -> System.out.println("Received: " + msg));
+ * }</pre>
+ *
+ * @param <T> the type of element stored in this channel
+ *
+ * @see RingBuffer
+ * @see Sequencer
+ * @see Poller
+ * @see Coordinator
+ */
 public final class Channel<T> {
     private final Coordinator coordinator;
     private final RingBuffer<T> ringBuffer;
@@ -12,22 +51,63 @@ public final class Channel<T> {
         this.ringBuffer = ringBuffer;
     }
 
+    /**
+     * Pushes a single item into the channel for consumption.
+     * <p>
+     * The method will publish the item to the ring buffer and
+     * signal the consumer thread (if waiting) via
+     * {@link Coordinator#wakeupConsumer()}.
+     * </p>
+     *
+     * @param item the item to push into the channel
+     */
     public void push(T item) {
         ringBuffer.push(coordinator, item);
         coordinator.wakeupConsumer();
     }
 
+    /**
+     * Pushes multiple items into the channel as a batch.
+     * <p>
+     * This allows for efficient batch publication by minimizing coordination
+     * overhead between producers and consumers.
+     * </p>
+     *
+     * @param items the array of items to push
+     */
     public void push(T[] items) {
         ringBuffer.push(coordinator, items);
         coordinator.wakeupConsumer();
     }
 
+    /**
+     * Attempts to receive up to {@code batchsize} items from the channel and
+     * process them using the given {@link Consumer}.
+     * <p>
+     * This method is non-blocking and returns immediately, even if no items are
+     * available. It is used in polling or event-loop style consumers.
+     * </p>
+     *
+     * @param batchsize the maximum number of items to consume in one batch
+     * @param consumer  the consumer function used to process received items
+     */
     public void receive(int batchsize, Consumer<T> consumer) {
         ringBuffer.poll(batchsize, consumer);
     }
 
+    /**
+     * Continuously waits until at least one item is available to consume, then
+     * processes up to {@code batchsize} items using the provided {@link Consumer}.
+     * <p>
+     * This method blocks using the {@link ConsumerWaitStrategy} defined in
+     * the {@link Coordinator}. It is suitable for dedicated consumer threads.
+     * </p>
+     *
+     * @param batchsize the maximum number of items to consume in one iteration
+     * @param consumer  the consumer function used to process received items
+     */
     public void blockingReceive(int batchsize, Consumer<T> consumer) {
-        while (ringBuffer.poll(batchsize, consumer) == PollState.IDLE) {
+        while (ringBuffer.poll(batchsize, consumer) == PollerState.IDLE) {
             coordinator.consumerWait();
         }
     }
@@ -67,6 +147,16 @@ public final class Channel<T> {
         return strategy;
     }
 
+    /**
+     * Creates a new single-producer, single-consumer (SPSC) channel with the given
+     * capacity and wait strategies.
+     *
+     * @param capacity the size of the ring buffer
+     * @param pw       the producer wait strategy type
+     * @param cw       the consumer wait strategy type
+     * @param <T>      the element type
+     * @return a new SPSC {@code Channel}
+     */
     public static <T> Channel<T> spsc(int capacity, ProducerWaitStrategyType pw, ConsumerWaitStrategyType cw) {
         Coordinator coordinator = new Coordinator(createProducerWaitStrategy(pw), createConsumerWaitStrategy(cw));
         Sequencer sequencer = new SingleProducerSequencer(capacity);
@@ -74,6 +164,16 @@ public final class Channel<T> {
         return new Channel<>(coordinator, new RingBuffer<>(sequencer, poller, capacity));
     }
 
+    /**
+     * Creates a new multi-producer, single-consumer (MPSC) channel with the given
+     * capacity and wait strategies.
+     *
+     * @param capacity the size of the ring buffer
+     * @param pw       the producer wait strategy type
+     * @param cw       the consumer wait strategy type
+     * @param <T>      the element type
+     * @return a new MPSC {@code Channel}
+     */
     public static <T> Channel<T> mpsc(int capacity, ProducerWaitStrategyType pw, ConsumerWaitStrategyType cw) {
         Coordinator coordinator = new Coordinator(createProducerWaitStrategy(pw), createConsumerWaitStrategy(cw));
         Sequencer sequencer = new MultiProducerSequencer(capacity);
@@ -81,6 +181,16 @@ public final class Channel<T> {
         return new Channel<>(coordinator, new RingBuffer<>(sequencer, poller, capacity));
     }
 
+    /**
+     * Creates a new single-producer, multi-consumer (SPMC) channel with the given
+     * capacity and wait strategies.
+     *
+     * @param capacity the size of the ring buffer
+     * @param pw       the producer wait strategy type
+     * @param cw       the consumer wait strategy type
+     * @param <T>      the element type
+     * @return a new SPMC {@code Channel}
+     */
     public static <T> Channel<T> spmc(int capacity, ProducerWaitStrategyType pw, ConsumerWaitStrategyType cw) {
         Coordinator coordinator = new Coordinator(createProducerWaitStrategy(pw), createConsumerWaitStrategy(cw));
         Sequencer sequencer = new SingleProducerSequencer(capacity);
@@ -88,6 +198,16 @@ public final class Channel<T> {
         return new Channel<>(coordinator, new RingBuffer<>(sequencer, poller, capacity));
     }
 
+    /**
+     * Creates a new multi-producer, multi-consumer (MPMC) channel with the given
+     * capacity and wait strategies.
+     *
+     * @param capacity the size of the ring buffer
+     * @param pw       the producer wait strategy type
+     * @param cw       the consumer wait strategy type
+     * @param <T>      the element type
+     * @return a new MPMC {@code Channel}
+     */
     public static <T> Channel<T> mpmc(int capacity, ProducerWaitStrategyType pw, ConsumerWaitStrategyType cw) {
         Coordinator coordinator = new Coordinator(createProducerWaitStrategy(pw), createConsumerWaitStrategy(cw));
         Sequencer sequencer = new MultiProducerSequencer(capacity);
